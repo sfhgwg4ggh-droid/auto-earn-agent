@@ -19,10 +19,10 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.37.0",
-    "playwright": "^1.48.0",
     "cheerio": "^1.0.0",
+    "front-matter": "^4.0.2",
     "handlebars": "^4.7.8",
-    "front-matter": "^4.0.2"
+    "playwright": "^1.48.0"
   },
   "engines": {
     "node": ">=20.0.0"
