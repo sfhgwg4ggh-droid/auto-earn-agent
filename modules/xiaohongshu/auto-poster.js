@@ -485,7 +485,7 @@ export async function autoPostToXHS(opts = {}) {
   // 加载草稿
   const { readJSON, writeJSON } = await import('../shared/storage.js');
   const inventory = await readJSON('xhs-inventory.json', []);
-  const drafts = inventory.filter(c => c.status === 'published' && !c.postedToXHS);
+  const drafts = inventory.filter(c => !c.postedToXHS);
 
   if (drafts.length === 0) {
     console.log('[XHS AutoPost] 📭 没有待发布的笔记');

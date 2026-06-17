@@ -768,7 +768,7 @@ async function main() {
       case 'sitemap':      await executeSitemap(state); break;
       case 'revenue':      await executeRevenue(state); break;
       case 'suggest':      await executeSuggest(); break;
-      case 'social':       await executeSocial(state); break;
+      case 'social':       { const { executeSocial } = await import('./modules/social/agent-executor.js'); await executeSocial(state); } break;
       default:
         console.log(`[Agent] ⚠️  Unknown action: ${a.action}`);
     }
