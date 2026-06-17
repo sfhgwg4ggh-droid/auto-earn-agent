@@ -308,7 +308,7 @@ async function decide(state, config) {
     : Infinity;
 
   const xhsReadyToPost = xhsInventory.filter(c =>
-    c.status === 'published' && !c.postedToXHS
+    !c.postedToXHS
   );
 
   if (xhsReadyToPost.length > 0 && hoursSinceXHSPost > 8) {
