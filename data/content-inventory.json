@@ -15,7 +15,9 @@
     "updatedAt": "2026-06-17T23:16:39.002Z",
     "date": "2026-06-17",
     "status": "published",
-    "_updated": "2026-06-17T23:16:39.002Z"
+    "_updated": "2026-06-17T23:16:39.002Z",
+    "publishedAt": "2026-06-17T23:23:24.702Z",
+    "publishedUrl": "/pet-supplies/best-dog-bed-for-large-dogs.html"
   },
   {
     "slug": "automatic-cat-feeder-review",
@@ -33,6 +35,8 @@
     "updatedAt": "2026-06-17T23:17:18.028Z",
     "date": "2026-06-17",
     "status": "published",
-    "_updated": "2026-06-17T23:17:18.028Z"
+    "_updated": "2026-06-17T23:17:18.028Z",
+    "publishedAt": "2026-06-17T23:23:24.703Z",
+    "publishedUrl": "/pet-supplies/automatic-cat-feeder-review.html"
   }
 ]

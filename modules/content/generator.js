@@ -114,7 +114,7 @@ Return JSON.`;
       messages: [{ role: 'user', content: userPrompt }],
     });
 
-    const text = msg.content[0]?.text || '';
+    const text = msg.content.filter(b => b.type === 'text').map(b => b.text).join('') || '';
     // 提取 JSON（可能在 markdown 代码块中）
     const json = extractJSON(text);
 

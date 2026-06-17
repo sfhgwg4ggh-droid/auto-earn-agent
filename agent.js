@@ -54,6 +54,9 @@ async function loadState() {
       lastSitemapAt: null,
       lastRevenueAt: null,
       lastAutoListAt: null,
+      lastXHSScrapeAt: null,
+      lastXHSGenerateAt: null,
+      lastXHSPublishAt: null,
       lastErrorAt: null,
       consecutiveErrors: 0,
       apiCallsToday: 0,
@@ -249,6 +252,53 @@ async function decide(state, config) {
   }
 
   // ----------------------------------------
+  // 优先级 5.3: 小红书选品采集 (每 12h)
+  // ----------------------------------------
+  const hoursSinceXHSScrape = state.lastXHSScrapeAt
+    ? (now - new Date(state.lastXHSScrapeAt)) / 3600000
+    : Infinity;
+
+  if (hoursSinceXHSScrape > 12) {
+    actions.push({
+      priority: 5.3,
+      action: 'xhs-scrape',
+      reason: `小红书选品采集 — 距上次 ${hoursSinceXHSScrape.toFixed(1)}h`,
+      data: { hoursSinceXHSScrape },
+    });
+  }
+
+  // ----------------------------------------
+  // 优先级 5.5: 小红书种草笔记生成 (每天，有产品+有API额)
+  // ----------------------------------------
+  const xhsInventory = await readJSON('xhs-inventory.json', []);
+  const xhsProducts = await readJSON('xhs-products.json', []);
+  const xhsCovered = new Set(xhsInventory.map(c => c.productTitle));
+  const xhsNeedingContent = xhsProducts.filter(p => !xhsCovered.has(p.title));
+  const xhsApiRemaining = config.anthropic.dailyLimit - state.apiCallsToday;
+
+  if (xhsNeedingContent.length > 0 && xhsApiRemaining > 0) {
+    actions.push({
+      priority: 5.5,
+      action: 'xhs-generate',
+      reason: `${xhsNeedingContent.length} 个小红书产品待写种草笔记, API余${xhsApiRemaining}次`,
+      data: { count: xhsNeedingContent.length, apiRemaining: xhsApiRemaining },
+    });
+  }
+
+  // ----------------------------------------
+  // 优先级 5.6: 小红书笔记发布 (有草稿立即发)
+  // ----------------------------------------
+  const xhsDrafts = xhsInventory.filter(c => c.status === 'draft' || !c.publishedAt);
+  if (xhsDrafts.length > 0) {
+    actions.push({
+      priority: 5.6,
+      action: 'xhs-publish',
+      reason: `${xhsDrafts.length} 篇小红书草稿待发布`,
+      data: { drafts: xhsDrafts.length },
+    });
+  }
+
+  // ----------------------------------------
   // 优先级 9: 内容库存不足 → 建议补充关键词
   // ----------------------------------------
   if (keywords.length === 0 || products.length === 0) {
@@ -323,6 +373,52 @@ async function executeMonitor(state) {
     console.log(`[Monitor] ✅ Profitable: ${result.profitable}, Alerts: ${result.alerts}, New links: ${result.newLinks}`);
   } catch (err) {
     console.error('[Monitor] ❌ Failed:', err.message);
+    state.consecutiveErrors++;
+    state.lastErrorAt = new Date().toISOString();
+  }
+}
+
+async function executeXHSScrape(state) {
+  console.log('\n📱 [XHS-Scrape] 小红书选品采集...');
+  try {
+    const { runXHSScraperPipeline } = await import('./modules/xiaohongshu/scraper.js');
+    const count = await runXHSScraperPipeline();
+    state.lastXHSScrapeAt = new Date().toISOString();
+    state.consecutiveErrors = 0;
+    console.log(`[XHS-Scrape] ✅ 采集 ${count} 个小红书商品`);
+  } catch (err) {
+    console.error('[XHS-Scrape] ❌ Failed:', err.message);
+    state.consecutiveErrors++;
+    state.lastErrorAt = new Date().toISOString();
+  }
+}
+
+async function executeXHSGenerate(state, config) {
+  console.log('\n✍️  [XHS-Generate] 生成小红书种草笔记...');
+  try {
+    const { generateXHSNotes } = await import('./modules/xiaohongshu/generator.js');
+    const results = await generateXHSNotes(3);
+    state.lastXHSGenerateAt = new Date().toISOString();
+    state.apiCallsToday += results.length;
+    state.consecutiveErrors = 0;
+    console.log(`[XHS-Generate] ✅ 生成 ${results.length} 篇笔记 (API today: ${state.apiCallsToday}/${config.anthropic.dailyLimit})`);
+  } catch (err) {
+    console.error('[XHS-Generate] ❌ Failed:', err.message);
+    state.consecutiveErrors++;
+    state.lastErrorAt = new Date().toISOString();
+  }
+}
+
+async function executeXHSPublish(state) {
+  console.log('\n📱 [XHS-Publish] 发布小红书笔记...');
+  try {
+    const { publishXHSNotes } = await import('./modules/xiaohongshu/publisher.js');
+    const result = await publishXHSNotes();
+    state.lastXHSPublishAt = new Date().toISOString();
+    state.consecutiveErrors = 0;
+    console.log(`[XHS-Publish] ✅ 发布 ${result.published} 篇笔记`);
+  } catch (err) {
+    console.error('[XHS-Publish] ❌ Failed:', err.message);
     state.consecutiveErrors++;
     state.lastErrorAt = new Date().toISOString();
   }
@@ -565,6 +661,9 @@ async function main() {
       lastSitemapAt: null,
       lastRevenueAt: null,
       lastAutoListAt: null,
+      lastXHSScrapeAt: null,
+      lastXHSGenerateAt: null,
+      lastXHSPublishAt: null,
       lastErrorAt: null,
       consecutiveErrors: 0,
       apiCallsToday: 0,
@@ -621,6 +720,9 @@ async function main() {
       case 'publish':      await executePublish(state); break;
       case 'monitor':      await executeMonitor(state); break;
       case 'auto-list':    await executeAutoList(state); break;
+      case 'xhs-scrape':   await executeXHSScrape(state); break;
+      case 'xhs-generate': await executeXHSGenerate(state, CONFIG); break;
+      case 'xhs-publish':  await executeXHSPublish(state); break;
       case 'keywords':     await executeKeywords(state); break;
       case 'sitemap':      await executeSitemap(state); break;
       case 'revenue':      await executeRevenue(state); break;

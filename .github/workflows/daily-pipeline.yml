@@ -35,7 +35,7 @@ jobs:
     env:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       ANTHROPIC_BASE_URL: ${{ vars.ANTHROPIC_BASE_URL || 'https://api.deepseek.com/anthropic' }}
-      ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL || 'claude-haiku-4-20250514' }}
+      ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL || 'DeepSeek-V4-flash' }}
       DOMAIN: ${{ vars.DOMAIN || 'zhushishunsui.cloud' }}
       BASE_URL: ${{ vars.BASE_URL || 'https://zhushishunsui.cloud' }}
       AMAZON_TAG: ${{ vars.AMAZON_TAG || 'smartpicks-20' }}
