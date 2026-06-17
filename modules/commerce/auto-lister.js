@@ -1,74 +1,89 @@
 /**
- * 自动上架 — 从 products.json 生成产品页面
+ * 自动上架器 — 将产品数据生成为 public/products/ 下的 HTML 页面
  */
-
-import { mkdir, writeFile } from 'fs/promises';
-import { existsSync } from 'fs';
-import { resolve } from 'path';
 import CONFIG from '../shared/config.js';
+import theme from '../shared/theme-engine.js';
 import storage from '../shared/storage.js';
-import { wrapHTML } from '../shared/theme-engine.js';
-
-function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+import fs from 'fs/promises';
+import path from 'path';
 
 export async function generateProductPages() {
-  const products = (await storage.readJSON('products.json', [])) || [];
-  if (!products.length) { console.log('[Auto-Lister] No products to list'); return 0; }
-
-  const dir = CONFIG.productsDir;
-  if (!existsSync(dir)) await mkdir(dir, { recursive: true });
-
-  // Generate individual product pages (top 20)
-  const top = products.sort((a,b) => (b.estimatedProfitMargin||0) - (a.estimatedProfitMargin||0)).slice(0, 20);
-  for (const p of top) {
-    const slug = (p.title || 'product').toLowerCase().replace(/[^a-z0-9]+/g,'-').substring(0,60);
-    const affiliateUrl = `https://www.amazon.com/s?k=${encodeURIComponent(p.keyword||p.title)}&tag=${CONFIG.affiliates.amazon.tag}`;
-
-    const html = wrapHTML({
-      title: `${p.title} — Best Price & Review`,
-      description: `Shop ${p.title}. Wholesale from ${p.priceCNY} CNY. Estimated retail $${p.estimatedRetailUSD}.`,
-      content: `<div class="container" style="padding:48px 0">
-        <h1>${esc(p.title)}</h1>
-        <div class="card" style="margin-bottom:24px">
-          <p><strong>Wholesale Price:</strong> ¥${p.priceCNY} CNY</p>
-          <p><strong>Est. Retail:</strong> $${p.estimatedRetailUSD} USD</p>
-          <p><strong>Source:</strong> ${esc(p.source||'1688.com')} · ${esc(p.company||'')}</p>
-          <a href="${affiliateUrl}" class="btn btn-accent" target="_blank" rel="nofollow sponsored">🔍 Check Amazon Price</a>
-        </div>
-      </div>`,
-      canonical: `${CONFIG.baseUrl}/products/${slug}/`,
-    });
-
-    await writeFile(resolve(dir, `${slug}.html`), html, 'utf-8');
+  const products = await storage.readJSON('products.json', []);
+  if (products.length === 0) {
+    console.log('[Auto-List] No products to list.');
+    return 0;
   }
 
-  // Generate index page
-  const grid = top.map((p,i) => {
-    const slug = (p.title||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').substring(0,60);
-    return `<div class="card" style="text-align:center">
-      <div style="font-size:2rem;margin-bottom:8px">${['🥇','🥈','🥉','🏅','📦'][i]||'📦'}</div>
-      <h3><a href="/products/${slug}/">${esc(p.title)}</a></h3>
-      <p style="color:var(--text-muted)">¥${p.priceCNY} → ~$${p.estimatedRetailUSD}</p>
+  const dir = path.join(CONFIG.publicDir, 'products');
+  await fs.mkdir(dir, { recursive: true });
+
+  const byCategory = {};
+  for (const p of products) {
+    const cat = p.category || 'general';
+    if (!byCategory[cat]) byCategory[cat] = [];
+    byCategory[cat].push(p);
+  }
+
+  let count = 0;
+  const tag = CONFIG.affiliates.amazon.tag || 'smartpicks-20';
+
+  for (const [category, items] of Object.entries(byCategory)) {
+    const productCards = items.slice(0, 20).map((p, i) => {
+      const searchTerm = encodeURIComponent(p.title || p.keyword || category);
+      return `
+      <div class="product-card">
+        <div class="rank">${i + 1}</div>
+        <div class="info">
+          <h3>${p.title || p.keyword || 'Product ' + (i+1)}</h3>
+          <p>Wholesale: ¥${p.priceCNY || 'N/A'} | Est. Retail: $${p.estimatedRetailUSD || 'N/A'} | Margin: ${p.estimatedProfitMargin || 'N/A'}%</p>
+          <p>Source: ${p.source || '1688.com'} | Scraped: ${p.scrapedAt ? new Date(p.scrapedAt).toLocaleDateString() : 'N/A'}</p>
+          <a href="https://www.amazon.com/s?k=${searchTerm}&tag=${tag}" rel="nofollow sponsored" class="btn btn-accent" target="_blank">Check Price on Amazon</a>
+        </div>
+      </div>`;
+    }).join('');
+
+    const content = `
+    <div class="container" style="padding:48px 0">
+      <h1>${category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} — Best Picks</h1>
+      <p class="affiliate-disclosure">We may earn a commission at no cost to you.</p>
+      ${productCards}
     </div>`;
-  }).join('');
 
-  const indexHTML = wrapHTML({
-    title: '🏆 Best Picks — Curated Product Deals',
-    description: 'Top products with the best profit margins for dropshipping and affiliate. Updated weekly.',
-    content: `<div class="container" style="padding:48px 0">
-      <h1>🏆 Best Picks</h1>
-      <p style="margin-bottom:32px">Curated products with great margins. Click through to check latest prices.</p>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">${grid}</div>
-    </div>`,
-    canonical: `${CONFIG.baseUrl}/products/`,
-  });
+    const html = theme.wrapHTML({
+      title: `Best ${category} Products — ${CONFIG.seo.siteName}`,
+      description: `Compare top ${category} products with prices and honest reviews.`,
+      content,
+      canonical: `${CONFIG.domain}/products/${category}/`,
+    });
 
-  await writeFile(resolve(dir, 'index.html'), indexHTML, 'utf-8');
-  console.log(`[Auto-Lister] ✅ ${top.length} product pages + index`);
-  return top.length;
+    const catDir = path.join(dir, category);
+    await fs.mkdir(catDir, { recursive: true });
+    await fs.writeFile(path.join(catDir, 'index.html'), html, 'utf-8');
+    count++;
+  }
+
+  // Overview page
+  const overview = `
+  <div class="container" style="padding:48px 0">
+    <h1>All Best Picks</h1>
+    <p>Curated across ${Object.keys(byCategory).length} categories.</p>
+    ${Object.entries(byCategory).map(([cat, items]) => `
+    <div class="card" style="margin:16px 0">
+      <h3><a href="/products/${cat}/">${cat.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</a></h3>
+      <p style="color:var(--text-muted)">${items.length} products</p>
+    </div>`).join('')}
+  </div>`;
+
+  await fs.writeFile(path.join(dir, 'index.html'), theme.wrapHTML({
+    title: `Best Picks — ${CONFIG.seo.siteName}`,
+    description: 'Curated product recommendations.',
+    content: overview,
+    canonical: `${CONFIG.domain}/products/`,
+  }), 'utf-8');
+  count++;
+
+  console.log(`[Auto-List] Generated ${count} pages`);
+  return count;
 }
 
-// CLI
-if (import.meta.url.startsWith('file://') && process.argv[1]?.includes('auto-lister')) {
-  generateProductPages().then(n => { console.log(`✅ ${n} pages`); process.exit(0); });
-}
+export default { generateProductPages };

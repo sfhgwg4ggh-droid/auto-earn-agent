@@ -10,6 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
+    permissions:
+      contents: write
+
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      ANTHROPIC_BASE_URL: ${{ vars.ANTHROPIC_BASE_URL || 'https://api.deepseek.com/anthropic' }}
+      DOMAIN: ${{ vars.DOMAIN || 'zhushishunsui.cloud' }}
+      BASE_URL: ${{ vars.BASE_URL || 'https://zhushishunsui.cloud' }}
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -17,22 +26,8 @@ jobs:
       - run: npm ci
 
       - name: 🎭 Install Playwright
-        run: npx playwright install chromium
+        run: npx playwright install chromium --with-deps
 
-      - name: 🔍 Scrape 1688 Products
-        run: node modules/commerce/scraper-1688.js
-        continue-on-error: true
-
-      - name: 📊 Monitor Prices
-        run: node modules/commerce/price-monitor.js
-
-      - name: 📄 Generate Product Pages
-        run: node modules/commerce/auto-lister.js
-
-      - name: 📤 Commit
-        run: |
-          git config user.name "Auto-Earn Agent"
-          git config user.email "agent@autoearn.dev"
-          git add data/products.json data/prices.json data/affiliate-links.json public/products/
-          git diff --staged --quiet || git commit -m "commerce: weekly product update $(date +%Y-%m-%d)"
-          git push
+      - name: 🤖 Run Agent (commerce focus)
+        run: node agent.js
+        timeout-minutes: 25

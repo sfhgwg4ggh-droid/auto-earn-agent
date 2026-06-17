@@ -10,22 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
+    permissions:
+      contents: write
+
+    env:
+      DOMAIN: ${{ vars.DOMAIN || 'zhushishunsui.cloud' }}
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '20', cache: 'npm' }
       - run: npm ci
 
-      - name: 📊 Record & Report
-        run: node modules/revenue/tracker.js
-
-      - name: 📈 Update Dashboard
-        run: node modules/revenue/dashboard-gen.js
-
-      - name: 📤 Commit
-        run: |
-          git config user.name "Auto-Earn Agent"
-          git config user.email "agent@autoearn.dev"
-          git add data/revenue.json public/dashboard/
-          git diff --staged --quiet || git commit -m "revenue: monthly report $(date +%Y-%m)"
-          git push
+      - name: 🤖 Run Agent (revenue focus)
+        run: node agent.js
+        timeout-minutes: 10

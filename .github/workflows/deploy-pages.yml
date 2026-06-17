@@ -3,6 +3,13 @@ name: 🚀 Deploy to GitHub Pages
 
 on:
   workflow_dispatch:
+  # push 触发：任何内容变更立即部署（daily/commerce/seo/revenue pipeline 都会触发）
+  push:
+    branches: [main]
+    paths:
+      - 'public/**'
+      - 'data/content-inventory.json'
+  # 兜底：daily pipeline 完成后也触发
   workflow_run:
     workflows: ['📝 Daily Content Pipeline']
     types: [completed]

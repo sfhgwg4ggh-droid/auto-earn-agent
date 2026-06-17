@@ -10,25 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
+    permissions:
+      contents: write
+
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      ANTHROPIC_BASE_URL: ${{ vars.ANTHROPIC_BASE_URL || 'https://api.deepseek.com/anthropic' }}
+      DOMAIN: ${{ vars.DOMAIN || 'zhushishunsui.cloud' }}
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '20', cache: 'npm' }
       - run: npm ci
 
-      - name: 🔑 Keyword Discovery
-        run: node modules/seo/keywords.js
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
-
-      - name: 🗺 Regenerate Sitemap
-        run: node modules/seo/sitemap.js
-
-      - name: 📤 Commit
-        run: |
-          git config user.name "Auto-Earn Agent"
-          git config user.email "agent@autoearn.dev"
-          git add data/keywords.json public/sitemap.xml public/robots.txt
-          git diff --staged --quiet || git commit -m "seo: weekly audit $(date +%Y-%m-%d)"
-          git push
+      - name: 🤖 Run Agent (SEO focus)
+        run: node agent.js
+        timeout-minutes: 15

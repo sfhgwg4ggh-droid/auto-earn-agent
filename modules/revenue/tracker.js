@@ -55,8 +55,9 @@ export async function recordDailyStats() {
  * 生成收益报告
  */
 export async function generateRevenueReport(days = 30) {
-  const revenue = await storage.readJSON('revenue.json', []);
-  const recent = revenue.slice(-days);
+  const revenue = await storage.readJSON('revenue.json', { monthly: [] });
+  const monthly = revenue.monthly || [];
+  const recent = monthly.slice(-days);
 
   const summary = {
     period: `${recent[0]?.date || 'N/A'} to ${recent[recent.length - 1]?.date || 'N/A'}`,
@@ -65,7 +66,6 @@ export async function generateRevenueReport(days = 30) {
     estimatedPageViews: recent.reduce((s, r) => s + (r.estimatedPageViews || 0), 0),
     estimatedClicks: recent.reduce((s, r) => s + (r.estimatedClicks || 0), 0),
     estimatedRevenue: recent.reduce((s, r) => s + (r.estimatedRevenue || 0), 0),
-    // 占位
     actualRevenue: recent.reduce((s, r) => s + (r.amazonAssociates?.commission || 0), 0),
   };
 
