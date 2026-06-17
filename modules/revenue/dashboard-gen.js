@@ -14,12 +14,13 @@ export async function generateDashboard() {
   const links = await storage.readJSON('affiliate-links.json', []);
   const products = await storage.readJSON('products.json', []);
 
+  const monthly = revenue.monthly || [];
   const published = inventory.filter(c => c.publishedAt);
   const today = new Date().toISOString().split('T')[0];
-  const todayRevenue = revenue.find(r => r.date === today);
+  const todayRevenue = monthly.find(r => r.date === today);
 
   // 收入图表数据（最近 30 天）
-  const chartData = revenue.slice(-30).map(r => ({
+  const chartData = monthly.slice(-30).map(r => ({
     date: r.date,
     views: r.estimatedPageViews || 0,
     clicks: r.estimatedClicks || 0,
@@ -60,7 +61,7 @@ export async function generateDashboard() {
           <tr><th>Date</th><th>Articles</th><th>Est. Views</th><th>Est. Clicks</th><th>Est. Revenue</th></tr>
         </thead>
         <tbody>
-          ${[...revenue].reverse().slice(0, 30).map(r => `
+          ${[...monthly].reverse().slice(0, 30).map(r => `
           <tr>
             <td>${r.date}</td>
             <td>${r.totalArticles || 0}</td>

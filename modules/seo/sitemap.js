@@ -71,4 +71,5 @@ if (process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, '
   (async () => { await generateSitemaps(); await generateRobotsTxt(); })();
 }
 
-export default { generateSitemaps, generateRobotsTxt };
+export { generateSitemaps, generateSitemaps as generateSitemap, generateRobotsTxt };
+export default { generateSitemaps, generateSitemap: generateSitemaps, generateRobotsTxt };
