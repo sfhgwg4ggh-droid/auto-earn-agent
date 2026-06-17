@@ -588,6 +588,149 @@ export async function checkLoginStatus() {
 }
 
 // ============================================================
+// 删除已发布笔记
+// ============================================================
+
+/**
+ * 批量删除小红书已发布笔记
+ * 使用 creator.xiaohongshu.com 内容管理 → 全选 → 删除
+ */
+export async function deleteAllNotes(opts = {}) {
+  const { dryRun = false, useCDP = false } = opts;
+
+  if (dryRun) {
+    console.log('[XHS Delete] 🏜️  预演模式 — 不实际删除');
+  }
+
+  let browser;
+  let context;
+
+  try {
+    if (useCDP) {
+      browser = await chromium.connectOverCDP('http://localhost:9222');
+      context = browser.contexts()[0];
+    } else {
+      if (!existsSync(COOKIE_FILE)) {
+        console.log('[XHS Delete] ❌ 未登录，请先 --login');
+        return { deleted: 0, reason: 'not_logged_in' };
+      }
+
+      browser = await chromium.launch({
+        headless: false, // 删除操作有二次确认对话框，用有头模式
+        args: ['--no-sandbox', '--disable-blink-features=AutomationControlled'],
+      });
+      context = await browser.newContext({
+        storageState: COOKIE_FILE,
+        viewport: { width: 1440, height: 900 },
+      });
+      await context.addInitScript(() => {
+        Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+      });
+    }
+
+    const page = context.pages()[0] || await context.newPage();
+
+    // Step 1: 登录检查
+    console.log('[XHS Delete] 🔍 检查登录状态...');
+    await page.goto('https://creator.xiaohongshu.com/', { waitUntil: 'networkidle', timeout: 30000 });
+    if (page.url().includes('/login')) {
+      console.log('[XHS Delete] ❌ Cookie 已过期');
+      if (!useCDP) await browser.close();
+      return { deleted: 0, reason: 'not_logged_in' };
+    }
+
+    // Step 2: 进入内容管理 → 笔记管理
+    console.log('[XHS Delete] 📋 进入内容管理...');
+    await page.goto('https://creator.xiaohongshu.com/note-manage/notes', { waitUntil: 'networkidle', timeout: 30000 });
+    await randomDelay(3000, 5000);
+
+    // Step 3: 循环删除每一页的笔记
+    let totalDeleted = 0;
+    let pageNum = 0;
+    const maxPages = 10; // 安全上限
+
+    while (pageNum < maxPages) {
+      pageNum++;
+      console.log(`[XHS Delete] 📄 处理第 ${pageNum} 页...`);
+
+      // 等待笔记列表加载
+      await randomDelay(2000, 4000);
+
+      // 查找全选 checkbox
+      const selectAll = page.locator('input[type="checkbox"]').first();
+      const hasNotes = await selectAll.isVisible({ timeout: 5000 }).catch(() => false);
+
+      if (!hasNotes) {
+        console.log('[XHS Delete] ✅ 没有更多笔记了');
+        break;
+      }
+
+      if (!dryRun) {
+        // 勾选全选
+        await selectAll.click();
+        await randomDelay(1000, 2000);
+
+        // 检查当前页勾选了多少条
+        const checkedCount = await page.locator('input[type="checkbox"]:checked').count();
+        console.log(`[XHS Delete]   已勾选 ${checkedCount} 条笔记`);
+
+        if (checkedCount <= 1) {
+          console.log('[XHS Delete]   本页无笔记，跳过');
+          break;
+        }
+
+        // 点击删除按钮
+        const deleteBtn = page.locator('button:has-text("删除"), span:has-text("删除")').first();
+        const deleteBtnVisible = await deleteBtn.isVisible({ timeout: 3000 }).catch(() => false);
+
+        if (deleteBtnVisible) {
+          await deleteBtn.click();
+          await randomDelay(1000, 2000);
+
+          // 确认删除对话框
+          const confirmBtn = page.locator('button:has-text("确定"), button:has-text("确认"), .el-button--primary').first();
+          const confirmVisible = await confirmBtn.isVisible({ timeout: 3000 }).catch(() => false);
+
+          if (confirmVisible) {
+            console.log('[XHS Delete]   🗑️  确认删除...');
+            await confirmBtn.click();
+            totalDeleted += (checkedCount - 1); // 减掉全选checkbox自己
+            await randomDelay(3000, 5000);
+          }
+        } else {
+          console.log('[XHS Delete]   ⚠️  找不到删除按钮，可能已无笔记');
+          break;
+        }
+      } else {
+        console.log('[XHS Delete]   🏜️  跳过（预演模式）');
+        const noteCount = await page.locator('.note-item, .table-row, [class*="note"]').count();
+        totalDeleted += noteCount;
+      }
+
+      // 翻下一页
+      const nextBtn = page.locator('.btn-next, button:has-text("下一页"), .el-pagination__next').first();
+      const hasNext = await nextBtn.isVisible({ timeout: 2000 }).catch(() => false);
+      if (hasNext && !dryRun) {
+        await nextBtn.click();
+        await randomDelay(2000, 4000);
+      } else {
+        break;
+      }
+    }
+
+    console.log(`[XHS Delete] ✅ 共删除 ${totalDeleted} 篇笔记`);
+    if (!useCDP) await browser.close();
+
+    return { deleted: totalDeleted };
+
+  } catch (err) {
+    console.error('[XHS Delete] ❌ 失败:', err.message);
+    if (!useCDP && browser) await browser.close();
+    return { deleted: 0, reason: 'error', error: err.message };
+  }
+}
+
+// ============================================================
 // 工具函数
 // ============================================================
 
@@ -634,6 +777,12 @@ if (process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, '
       console.log(`\n✅ 发布完成: ${r.posted} 篇`);
       process.exit(0);
     });
+  } else if (args.includes('--delete-all')) {
+    const dryRun = args.includes('--dry-run');
+    deleteAllNotes({ dryRun }).then(r => {
+      console.log(`\n✅ 删除完成: ${r.deleted} 篇`);
+      process.exit(0);
+    });
   } else if (args.includes('--status')) {
     checkLoginStatus().then(() => process.exit(0));
   } else {
@@ -641,11 +790,13 @@ if (process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, '
 🤖 小红书自动发文器
 
 用法:
-  node modules/xiaohongshu/auto-poster.js --login      扫码登录并保存 Cookie
-  node modules/xiaohongshu/auto-poster.js --login --cdp 连接已有 Chrome 登录
-  node modules/xiaohongshu/auto-poster.js --post        发布草稿箱中的笔记
+  node modules/xiaohongshu/auto-poster.js --login        扫码登录并保存 Cookie
+  node modules/xiaohongshu/auto-poster.js --login --cdp  连接已有 Chrome 登录
+  node modules/xiaohongshu/auto-poster.js --post         发布草稿箱中的笔记
   node modules/xiaohongshu/auto-poster.js --post --dry-run  预演模式
-  node modules/xiaohongshu/auto-poster.js --status      检查登录状态
+  node modules/xiaohongshu/auto-poster.js --delete-all   删除所有已发布笔记
+  node modules/xiaohongshu/auto-poster.js --delete-all --dry-run  预演（看会删多少）
+  node modules/xiaohongshu/auto-poster.js --status       检查登录状态
 
 CDP 模式 (推荐):
   1. 关闭 Chrome
