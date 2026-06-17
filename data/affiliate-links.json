@@ -1,0 +1,12 @@
+[
+  { "id": "amz-dog-bed", "name": "Orthopedic Dog Bed", "url": "https://www.amazon.com/dp/B0EXAMPLE1?tag=your-tag-20", "platform": "amazon", "category": "pet-supplies", "commission": "3-8%" },
+  { "id": "amz-cat-feeder", "name": "Automatic Cat Feeder", "url": "https://www.amazon.com/dp/B0EXAMPLE2?tag=your-tag-20", "platform": "amazon", "category": "pet-supplies", "commission": "3-8%" },
+  { "id": "amz-robot-vacuum", "name": "Robot Vacuum for Pet Hair", "url": "https://www.amazon.com/dp/B0EXAMPLE3?tag=your-tag-20", "platform": "amazon", "category": "home-garden", "commission": "3-8%" },
+  { "id": "amz-air-purifier", "name": "HEPA Air Purifier", "url": "https://www.amazon.com/dp/B0EXAMPLE4?tag=your-tag-20", "platform": "amazon", "category": "home-garden", "commission": "3-8%" },
+  { "id": "amz-earbuds", "name": "Wireless Earbuds", "url": "https://www.amazon.com/dp/B0EXAMPLE5?tag=your-tag-20", "platform": "amazon", "category": "tech-gadgets", "commission": "3%" },
+  { "id": "amz-keyboard", "name": "Mechanical Keyboard", "url": "https://www.amazon.com/dp/B0EXAMPLE6?tag=your-tag-20", "platform": "amazon", "category": "tech-gadgets", "commission": "3%" },
+  { "id": "amz-yoga-mat", "name": "Premium Yoga Mat", "url": "https://www.amazon.com/dp/B0EXAMPLE7?tag=your-tag-20", "platform": "amazon", "category": "fitness-sports", "commission": "3-8%" },
+  { "id": "amz-dumbbells", "name": "Adjustable Dumbbells", "url": "https://www.amazon.com/dp/B0EXAMPLE8?tag=your-tag-20", "platform": "amazon", "category": "fitness-sports", "commission": "3-8%" },
+  { "id": "amz-baby-monitor", "name": "Smart Baby Monitor", "url": "https://www.amazon.com/dp/B0EXAMPLE9?tag=your-tag-20", "platform": "amazon", "category": "baby-kids", "commission": "3-8%" },
+  { "id": "amz-car-seat", "name": "Convertible Car Seat", "url": "https://www.amazon.com/dp/B0EXAMPLE10?tag=your-tag-20", "platform": "amazon", "category": "baby-kids", "commission": "3-8%" }
+]

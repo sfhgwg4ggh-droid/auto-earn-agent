@@ -1,0 +1,30 @@
+{
+  "name": "auto-earn-agent",
+  "version": "1.0.0",
+  "description": "全自动内容变现 Agent — AI 生成 SEO 内容 → 搜索流量 → Affiliate/广告/电商变现，跑在 GitHub Actions 上",
+  "type": "module",
+  "scripts": {
+    "agent": "node agent.js",
+    "agent:daemon": "node agent.js --daemon",
+    "agent:report": "node agent.js --report",
+    "agent:dry": "node agent.js --dry-run",
+    "content": "node modules/content/generator.js && node modules/content/publisher.js",
+    "seo:keywords": "node modules/seo/keywords.js",
+    "seo:sitemap": "node modules/seo/sitemap.js",
+    "commerce:scrape": "node modules/commerce/scraper-1688.js",
+    "commerce:monitor": "node modules/commerce/price-monitor.js",
+    "revenue:report": "node modules/revenue/tracker.js",
+    "dashboard": "node modules/revenue/dashboard-gen.js",
+    "setup": "npx playwright install chromium"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.37.0",
+    "playwright": "^1.48.0",
+    "cheerio": "^1.0.0",
+    "handlebars": "^4.7.8",
+    "front-matter": "^4.0.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

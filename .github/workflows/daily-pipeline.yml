@@ -1,0 +1,72 @@
+# 🤖 Auto-Earn Daily Pipeline
+# Agent 自主判断并执行：关键词 → 采集 → 生成 → 发布 → 监控 → 收益
+name: 📝 Daily Content Pipeline
+
+on:
+  # ⏰ 每天 UTC 0点 + 8点 (北京时间 8点 + 16点)
+  schedule:
+    - cron: '0 0,8 * * *'
+
+  # 🖐 手动触发
+  workflow_dispatch:
+
+  # 🔄 修改核心模块时自动触发
+  push:
+    branches: [main]
+    paths:
+      - 'agent.js'
+      - 'modules/**'
+      - 'data/keywords.json'
+      - 'package.json'
+      - '.github/workflows/daily-pipeline.yml'
+
+concurrency:
+  group: daily-content
+  cancel-in-progress: true
+
+jobs:
+  agent-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    permissions:
+      contents: write  # 允许 git push
+
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      ANTHROPIC_BASE_URL: ${{ vars.ANTHROPIC_BASE_URL || 'https://api.deepseek.com/anthropic' }}
+      ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL || 'claude-haiku-4-20250514' }}
+      DOMAIN: ${{ vars.DOMAIN || 'zhushishunsui.cloud' }}
+      BASE_URL: ${{ vars.BASE_URL || 'https://zhushishunsui.cloud' }}
+      AMAZON_TAG: ${{ vars.AMAZON_TAG || 'smartpicks-20' }}
+      GOOGLE_ANALYTICS_ID: ${{ vars.GOOGLE_ANALYTICS_ID || '' }}
+      GOOGLE_ADSENSE_ID: ${{ vars.GOOGLE_ADSENSE_ID || '' }}
+
+    steps:
+      - name: 📥 检出代码
+        uses: actions/checkout@v4
+
+      - name: 🔧 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 📦 安装依赖
+        run: npm ci
+
+      - name: 🎭 安装 Playwright 浏览器
+        run: npx playwright install chromium --with-deps
+
+      - name: 🤖 运行 Agent（自主决策 + 执行 + 提交）
+        run: node agent.js
+        timeout-minutes: 30
+
+      - name: 📊 运行摘要
+        if: always()
+        run: |
+          echo "### 🤖 Agent 执行完毕" >> $GITHUB_STEP_SUMMARY
+          echo "**站点**: https://${{ vars.DOMAIN || 'zhushishunsui.cloud' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**下次自动运行**: 6 小时后" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "> 💡 手动触发: Actions → Daily Content Pipeline → Run workflow" >> $GITHUB_STEP_SUMMARY

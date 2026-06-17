@@ -1,0 +1,121 @@
+# 验证流水线：确认 Playwright + Node.js 在 CI 环境正常工作
+name: 🧪 Test Pipeline
+
+on:
+  workflow_dispatch:    # 手动触发
+  push:
+    branches: [main]
+    paths:
+      - 'modules/shared/browser-setup.js'
+      - 'package.json'
+      - '.github/workflows/test-pipeline.yml'
+
+jobs:
+  test-playwright:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 📥 检出代码
+        uses: actions/checkout@v4
+
+      - name: 🔧 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 📦 安装依赖
+        run: npm ci
+
+      - name: 🎭 安装 Playwright 浏览器
+        run: npx playwright install chromium
+
+      - name: 🔍 验证 Playwright — 截图 zhushishunsui.cloud
+        run: |
+          cat > /tmp/test-browser.js << 'SCRIPT'
+          import { launchBrowser } from './modules/shared/browser-setup.js';
+
+          console.log('🚀 启动浏览器...');
+          const browser = await launchBrowser();
+          const page = await browser.newPage();
+
+          console.log('📸 访问 zhushishunsui.cloud ...');
+          await page.goto('https://zhushishunsui.cloud', {
+            waitUntil: 'networkidle',
+            timeout: 30000,
+          });
+
+          const title = await page.title();
+          console.log(`✅ 页面标题: "${title}"`);
+
+          await page.screenshot({
+            path: 'public/assets/screenshot-test.png',
+            fullPage: false,
+          });
+          console.log('📸 截图保存: public/assets/screenshot-test.png');
+
+          // 测试搜索 (模拟 SEO 关键词研究)
+          console.log('🔍 模拟 Google 搜索...');
+          await page.goto('https://www.google.com/search?q=养鸡技术', {
+            waitUntil: 'networkidle',
+            timeout: 30000,
+          });
+          const results = await page.$$eval('h3', els => els.map(e => e.textContent));
+          console.log(`📊 搜索结果 (前 ${Math.min(5, results.length)} 条):`);
+          results.slice(0, 5).forEach((r, i) => console.log(`  ${i + 1}. ${r}`));
+
+          await browser.close();
+          console.log('✅ Playwright 验证通过!');
+          SCRIPT
+          node /tmp/test-browser.js
+
+      - name: 📤 上传截图 artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-screenshots
+          path: public/assets/screenshot-test.png
+          retention-days: 7
+
+  test-modules:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 📦 安装依赖
+        run: npm ci
+
+      - name: 🧪 测试共享模块加载
+        run: |
+          cat > /tmp/test-modules.js << 'SCRIPT'
+          import CONFIG from './modules/shared/config.js';
+          import storage from './modules/shared/storage.js';
+          import theme from './modules/shared/theme-engine.js';
+
+          // 验证配置
+          console.log('📋 域名:', CONFIG.domain);
+          console.log('📋 数据目录:', CONFIG.dataDir);
+          console.log('📋 内容分类数:', CONFIG.content.categories.length);
+          console.assert(CONFIG.domain === 'zhushishunsui.cloud', '域名匹配');
+
+          // 验证存储 (不存在则返回默认值)
+          const kw = await storage.readJSON('keywords.json', []);
+          console.log('📋 关键词数:', kw.length);
+          console.assert(kw.length > 0, '有关键词数据');
+
+          // 验证主题
+          const css = theme.generateCSS();
+          console.assert(css.includes('--green: #4A7C59'), '主题包含主色');
+          console.assert(css.includes('思源黑体'), '主题包含指定字体');
+          console.assert(!css.includes('inter'), '主题不包含 Inter');
+          console.assert(!css.includes('bounce'), '主题不包含 bounce');
+
+          console.log('✅ 所有模块验证通过!');
+          SCRIPT
+          node /tmp/test-modules.js

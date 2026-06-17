@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Picks & Honest Reviews — Product Reviews You Can Trust</title>
+<meta name="description" content="We research, test, and compare the best products for your home, pets, and life. Honest reviews with no BS.">
+<meta property="og:title" content="Smart Picks & Honest Reviews">
+<meta property="og:description" content="We research, test, and compare the best products. Honest reviews with no BS.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://autoearn.pages.dev/">
+<style>
+:root{--primary:#1a56db;--primary-dark:#1e429f;--primary-light:#ebf0fa;--accent:#059669;--accent-light:#ecfdf5;--bg:#f9fafb;--card:#fff;--border:#e5e7eb;--text:#111827;--text-secondary:#4b5563;--text-muted:#9ca3af;--success:#059669;--warning:#d97706;--danger:#dc2626;--space-1:4px;--space-2:8px;--space-3:16px;--space-4:24px;--space-5:32px;--space-6:48px;--space-8:64px;--radius-sm:4px;--radius:8px;--radius-lg:12px;--shadow-sm:0 1px 2px rgba(0,0,0,.05);--shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);--shadow-lg:0 4px 12px rgba(0,0,0,.08);--font-sans:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;--content-max:1100px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.7}
+.container{max-width:var(--content-max);margin:0 auto;padding:0 var(--space-4)}
+a{color:var(--primary);text-decoration:none}a:hover{color:var(--primary-dark);text-decoration:underline}
+h1,h2,h3{font-weight:700;line-height:1.25}h1{font-size:2rem}h2{font-size:1.5rem;margin-bottom:var(--space-3)}h3{font-size:1.2rem}
+
+.navbar{background:rgba(255,255,255,.95);border-bottom:1px solid var(--border);padding:var(--space-3) 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)}
+.navbar .container{display:flex;align-items:center;justify-content:space-between}
+.navbar .brand{font-weight:700;font-size:1.15rem;color:var(--text);display:flex;align-items:center;gap:var(--space-2)}
+.navbar .nav-links{display:flex;gap:var(--space-4);list-style:none}
+.navbar .nav-links a{color:var(--text-secondary);font-size:.9375rem;font-weight:500}
+.navbar .nav-links a:hover{color:var(--primary);text-decoration:none}
+
+.hero{background:linear-gradient(135deg,#1e3a5f 0%,#1a56db 100%);color:#fff;padding:var(--space-8) 0;text-align:center}
+.hero h1{color:#fff;font-size:2.5rem;max-width:700px;margin:0 auto var(--space-3)}
+.hero p{color:rgba(255,255,255,.85);font-size:1.15rem;max-width:600px;margin:0 auto var(--space-5)}
+.hero .btn-group{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+.btn{display:inline-flex;align-items:center;gap:var(--space-2);padding:12px 24px;border:none;border-radius:var(--radius-sm);font-family:var(--font-sans);font-size:.9375rem;font-weight:600;cursor:pointer;text-decoration:none;transition:background .15s,transform .1s}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#047857;color:#fff;text-decoration:none}
+.btn-outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.4)}
+.btn-outline:hover{background:rgba(255,255,255,.1);color:#fff;text-decoration:none}
+
+.category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:var(--space-3);padding:var(--space-5) 0}
+.cat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4);text-align:center;display:block;text-decoration:none;transition:box-shadow .15s,transform .15s}
+.cat-card:hover{box-shadow:var(--shadow);transform:translateY(-2px);text-decoration:none}
+.cat-card .icon{font-size:2.25rem;margin-bottom:var(--space-2)}
+.cat-card h3{color:var(--text);margin-bottom:var(--space-1);font-size:1rem}
+.cat-card p{color:var(--text-muted);font-size:.8125rem}
+
+.article-list{padding:var(--space-5) 0}
+.article-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-3);margin-bottom:var(--space-2);display:flex;gap:var(--space-3);align-items:center}
+.article-item .date{color:var(--text-muted);font-size:.8125rem;white-space:nowrap;min-width:60px}
+.article-item .title{font-weight:600;color:var(--text)}
+.badge{display:inline-flex;padding:2px 10px;border-radius:9999px;font-size:.75rem;font-weight:600}
+.badge-cat{background:var(--primary-light);color:var(--primary)}
+
+.cta-section{background:var(--primary-light);border:1px solid #bfdbfe;border-radius:var(--radius-lg);padding:var(--space-5);text-align:center;margin:var(--space-5) 0}
+.disclaimer{text-align:center;color:var(--text-muted);font-size:.8125rem;padding:var(--space-5) 0}
+
+.footer{background:#1f2937;color:#e5e7eb;padding:var(--space-6) 0;margin-top:var(--space-8);font-size:.875rem}
+.footer a{color:#93c5fd}.footer a:hover{color:#bfdbfe}
+.footer .container{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--space-5)}
+.footer h4{color:#fff;margin-bottom:var(--space-2)}
+
+@media(max-width:768px){.hero h1{font-size:1.5rem}.category-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Smart Picks & Honest Reviews","url":"https://autoearn.pages.dev","description":"Product reviews you can trust. We test, compare, and recommend the best products.","inLanguage":"en-US","publisher":{"@type":"Organization","name":"Smart Picks & Honest Reviews"}}</script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="/" class="brand">🔍 Smart Picks & Reviews</a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/blog/">Reviews</a></li>
+      <li><a href="/products/">Best Picks</a></li>
+      <li><a href="/dashboard/">Dashboard</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <h1>Honest Product Reviews You Can Trust</h1>
+    <p>We spend hours testing and comparing products so you don't have to. No hype, no BS — just real recommendations from real testing.</p>
+    <div class="btn-group">
+      <a href="/blog/" class="btn btn-primary">📝 Browse Reviews</a>
+      <a href="/products/" class="btn btn-outline">🏆 Best Picks</a>
+      <a href="/dashboard/" class="btn btn-outline">📊 Live Dashboard</a>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div style="padding:var(--space-5) 0 var(--space-2)">
+    <h2>📂 Browse by Category</h2>
+    <p style="color:var(--text-muted)">Five categories. Hundreds of honest reviews.</p>
+  </div>
+  <div class="category-grid" id="cat-grid">
+    <a href="/blog/pet-supplies/" class="cat-card">
+      <div class="icon">🐾</div><h3>Pet Supplies</h3><p>Beds, feeders, toys & more</p>
+    </a>
+    <a href="/blog/home-garden/" class="cat-card">
+      <div class="icon">🏡</div><h3>Home & Garden</h3><p>Vacuums, purifiers, tools</p>
+    </a>
+    <a href="/blog/tech-gadgets/" class="cat-card">
+      <div class="icon">💻</div><h3>Tech & Gadgets</h3><p>Earbuds, keyboards, hubs</p>
+    </a>
+    <a href="/blog/fitness-sports/" class="cat-card">
+      <div class="icon">💪</div><h3>Fitness & Sports</h3><p>Yoga mats, dumbbells, gear</p>
+    </a>
+    <a href="/blog/baby-kids/" class="cat-card">
+      <div class="icon">👶</div><h3>Baby & Kids</h3><p>Monitors, strollers, toys</p>
+    </a>
+  </div>
+
+  <div style="padding:var(--space-3) 0">
+    <h2>📝 Latest Reviews</h2>
+  </div>
+  <div class="article-list">
+    <div class="article-item">
+      <span class="date">Coming soon</span>
+      <div>
+        <a class="title" href="/blog/">🚀 Content engine is live — first reviews being generated...</a>
+        <div style="margin-top:var(--space-1)"><span class="badge badge-cat">System</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-section">
+    <h2>💡 How We Make Money</h2>
+    <p style="margin-bottom:var(--space-2);max-width:600px;margin-left:auto;margin-right:auto">As an Amazon Associate we earn from qualifying purchases — at <strong>zero extra cost</strong> to you. This never influences our ratings.</p>
+    <a href="/dashboard/" class="btn btn-outline" style="color:var(--primary);border-color:var(--primary)">📊 See Our Live Earnings</a>
+  </div>
+
+  <div class="disclaimer">
+    <p>⚡ Powered by <strong>Auto-Earn Agent</strong> — AI content engine running on GitHub Actions. New reviews published daily.</p>
+    <p>Fully automated. Fully transparent. <a href="https://github.com/sfhgwg4ggh-droid/auto-earn-agent">View source on GitHub →</a></p>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div>
+      <h4>About</h4>
+      <p>We research, test, and review products to help you buy smarter. Our recommendations are based on hands-on testing and real user feedback.</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <p><a href="/blog/">📝 All Reviews</a></p>
+      <p><a href="/products/">🏆 Best Picks</a></p>
+      <p><a href="/sitemap.xml">🗺 Sitemap</a></p>
+    </div>
+    <div>
+      <h4>Disclosure</h4>
+      <p>As an Amazon Associate we earn from qualifying purchases. This does not affect our ratings.</p>
+    </div>
+  </div>
+  <div style="text-align:center;padding-top:24px;opacity:.5">
+    <p>&copy; 2026 Smart Picks & Reviews. Powered by Auto-Earn Agent 🤖</p>
+  </div>
+</footer>
+
+</body>
+</html>

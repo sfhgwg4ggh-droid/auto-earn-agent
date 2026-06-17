@@ -1,0 +1,17 @@
+[
+  { "keyword": "best dog bed for large dogs", "category": "pet-supplies", "volume": 5400, "difficulty": "medium", "intent": "buyer", "status": "pending" },
+  { "keyword": "automatic cat feeder review", "category": "pet-supplies", "volume": 3600, "difficulty": "low", "intent": "buyer", "status": "pending" },
+  { "keyword": "best robot vacuum for pet hair", "category": "home-garden", "volume": 8800, "difficulty": "high", "intent": "buyer", "status": "pending" },
+  { "keyword": "air purifier for allergies review", "category": "home-garden", "volume": 4400, "difficulty": "medium", "intent": "buyer", "status": "pending" },
+  { "keyword": "wireless earbuds under 50", "category": "tech-gadgets", "volume": 6500, "difficulty": "medium", "intent": "buyer", "status": "pending" },
+  { "keyword": "best mechanical keyboard for programming", "category": "tech-gadgets", "volume": 3200, "difficulty": "low", "intent": "buyer", "status": "pending" },
+  { "keyword": "best yoga mat for hot yoga", "category": "fitness-sports", "volume": 2900, "difficulty": "low", "intent": "buyer", "status": "pending" },
+  { "keyword": "adjustable dumbbells review", "category": "fitness-sports", "volume": 4200, "difficulty": "medium", "intent": "buyer", "status": "pending" },
+  { "keyword": "best baby monitor 2026", "category": "baby-kids", "volume": 5100, "difficulty": "medium", "intent": "buyer", "status": "pending" },
+  { "keyword": "convertible car seat safety review", "category": "baby-kids", "volume": 3700, "difficulty": "medium", "intent": "buyer", "status": "pending" },
+  { "keyword": "best pet grooming clippers", "category": "pet-supplies", "volume": 2400, "difficulty": "low", "intent": "buyer", "status": "pending" },
+  { "keyword": "cordless stick vacuum comparison", "category": "home-garden", "volume": 3100, "difficulty": "medium", "intent": "compare", "status": "pending" },
+  { "keyword": "standing desk converter review", "category": "home-garden", "volume": 2800, "difficulty": "low", "intent": "buyer", "status": "pending" },
+  { "keyword": "USB-C hub for MacBook Pro", "category": "tech-gadgets", "volume": 4100, "difficulty": "medium", "intent": "buyer", "status": "pending" },
+  { "keyword": "resistance bands set for home workout", "category": "fitness-sports", "volume": 3300, "difficulty": "low", "intent": "buyer", "status": "pending" }
+]

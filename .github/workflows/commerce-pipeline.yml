@@ -1,0 +1,38 @@
+name: 🛒 Weekly Commerce Pipeline
+
+on:
+  schedule:
+    - cron: '0 8 * * 3'   # Wednesday 8am UTC
+  workflow_dispatch:
+
+jobs:
+  commerce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci
+
+      - name: 🎭 Install Playwright
+        run: npx playwright install chromium
+
+      - name: 🔍 Scrape 1688 Products
+        run: node modules/commerce/scraper-1688.js
+        continue-on-error: true
+
+      - name: 📊 Monitor Prices
+        run: node modules/commerce/price-monitor.js
+
+      - name: 📄 Generate Product Pages
+        run: node modules/commerce/auto-lister.js
+
+      - name: 📤 Commit
+        run: |
+          git config user.name "Auto-Earn Agent"
+          git config user.email "agent@autoearn.dev"
+          git add data/products.json data/prices.json data/affiliate-links.json public/products/
+          git diff --staged --quiet || git commit -m "commerce: weekly product update $(date +%Y-%m-%d)"
+          git push
