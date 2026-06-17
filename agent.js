@@ -54,6 +54,7 @@ async function loadState() {
       lastSitemapAt: null,
       lastRevenueAt: null,
       lastAutoListAt: null,
+      lastSocialAt: null,
       lastXHSScrapeAt: null,
       lastXHSGenerateAt: null,
       lastXHSPublishAt: null,
@@ -661,6 +662,7 @@ async function main() {
       lastSitemapAt: null,
       lastRevenueAt: null,
       lastAutoListAt: null,
+      lastSocialAt: null,
       lastXHSScrapeAt: null,
       lastXHSGenerateAt: null,
       lastXHSPublishAt: null,
@@ -727,6 +729,7 @@ async function main() {
       case 'sitemap':      await executeSitemap(state); break;
       case 'revenue':      await executeRevenue(state); break;
       case 'suggest':      await executeSuggest(); break;
+      case 'social':       await executeSocial(state); break;
       default:
         console.log(`[Agent] ⚠️  Unknown action: ${a.action}`);
     }

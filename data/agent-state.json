@@ -1,10 +1,10 @@
 {
   "startedAt": "2026-06-17T23:01:22.659Z",
-  "totalRuns": 6,
+  "totalRuns": 7,
   "totalErrors": 0,
   "lastScrapeAt": "2026-06-17T23:03:33.412Z",
-  "lastGenerateAt": "2026-06-17T23:17:20.030Z",
-  "lastPublishAt": null,
+  "lastGenerateAt": "2026-06-17T23:23:24.813Z",
+  "lastPublishAt": "2026-06-17T23:23:24.765Z",
   "lastMonitorAt": null,
   "lastKeywordsAt": "2026-06-17T23:01:28.013Z",
   "lastSitemapAt": "2026-06-17T23:01:28.014Z",
@@ -13,5 +13,6 @@
   "lastErrorAt": "2026-06-17T23:01:22.929Z",
   "consecutiveErrors": 0,
   "apiCallsToday": 2,
-  "apiCallDate": "2026-06-17"
+  "apiCallDate": "2026-06-17",
+  "lastXHSScrapeAt": "2026-06-17T23:24:45.780Z"
 }

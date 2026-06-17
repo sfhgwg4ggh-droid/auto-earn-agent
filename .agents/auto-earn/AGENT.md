@@ -10,13 +10,23 @@ model: haiku
 ## 系统架构
 
 ```
-Keywords → Scrape(1688) → Products → Generate(AI) → Content → Publish(HTML) → Monitor(Prices)
+                    ┌─ 英文 SEO 站 ──────────────────────┐
+                    │  Keywords → Scrape(1688) → Products  │
+                    │  → Generate(AI) → Content → Publish  │
+                    │  → Amazon Affiliate / Google AdSense │
+                    └──────────────────────────────────────┘
+
+                    ┌─ 小红书种草 ────────────────────────┐
+                    │  XHS Niches → Scrape(1688)          │
+                    │  → Generate(种草笔记) → Publish     │
+                    │  → 淘宝搜索 / Affiliate 链接        │
+                    └──────────────────────────────────────┘
 ```
 
-- **数据层**: `data/` 目录下的 JSON 文件（keywords.json, products.json, content-inventory.json, affiliate-links.json, revenue.json）
-- **模块层**: `modules/commerce/`（采集+监控）、`modules/content/`（生成+发布）、`modules/shared/`（浏览器+存储+配置+主题）
-- **调度层**: `agent.js` — 中心调度器，自主决策何时执行何种操作
-- **部署层**: GitHub Actions（`.github/workflows/`）自动运行
+- **数据层**: `data/` 目录下的 JSON 文件（keywords.json, products.json, content-inventory.json, xhs-products.json, xhs-inventory.json, affiliate-links.json, revenue.json）
+- **模块层**: `modules/commerce/`（1688采集+价格监控）、`modules/content/`（英文SEO生成+发布）、`modules/xiaohongshu/`（选品+种草笔记+发布）、`modules/seo/`、`modules/shared/`
+- **调度层**: `agent.js` — 中心调度器，12级优先级自主决策
+- **部署层**: GitHub Actions 定时触发 → `node agent.js` → 自动 commit + push → GitHub Pages
 
 ## 核心工作流
 
@@ -47,15 +57,44 @@ Keywords → Scrape(1688) → Products → Generate(AI) → Content → Publish(
 扫描 products.json → 过滤利润 ≥30% 的产品 → 生成 Affiliate 链接
 ```
 
+### 5. 🆕 小红书带货 (XHS Pipeline)
+```
+XHS 选品采集 → 种草笔记生成 → HTML 页面发布
+```
+- **选品**：1688 搜索窄赛道关键词 → XHS 评分算法（颜值/情绪价值/起批量/利润）→ ≥60分入选
+- **种草笔记**：AI 生成小红书风格内容 → 标题=痛点+品类+情绪词 → 正文口语化真实体验 → 5-8个精准标签
+- **发布**：双列瀑布流首页 + 笔记详情页 → 移动优先设计 → Schema.org 结构 → 淘宝/Amazon 链接
+- **赛道覆盖**：养生日常化、头皮护理、宠物户外、手工DIY、香氛情绪、中式生活美学
+
+## 小红书种草知识库
+
+### 爆款标题公式
+> **痛点词 + 品类词 + 情绪修饰词**（前12字必须含核心关键词）
+
+### 8个关键词布局位置
+标题 > 正文前200字 > 评论区 > 话题标签 > 图片OCR > 视频字幕 > 用户名 > 竞品分析
+
+### 内容黄金标准
+- 搜索场景：实用、有帮助（测评、攻略、对比）
+- 浏览场景：向上、有质感（生活美学、仪式感）
+- 核心公式：**好货 × NPL经营（笔记→群聊→直播） × 内容规模 × 付费撬动自然**
+
+### 2026热门赛道
+养生日常化 | 头皮护理 | 智能可穿戴 | 宠物户外装备 | 手工串珠 | 香氛玩偶 | 中式滋补 | 功能沙发
+
 ## 决策规则
 
 当用户让你操作 auto-earn 系统时，按以下优先级行事：
 
-1. **有未发布内容？** → 先发布（`node agent.js` 会自动处理）
-2. **有产品没内容 + API 额度还有？** → 生成内容
+1. **有未发布内容？** → 先发布
+2. **有产品没内容 + API 额度还有？** → AI 生成评测文章
 3. **有关键词没产品 + 距离上次采集 >6h？** → 采集 1688
 4. **产品库不为空 + 距离上次监控 >12h？** → 价格监控
-5. **数据库为空？** → 种子数据（从 CONFIG 提取关键词）
+5. **有产品 + 距离上次 >24h？** → 生成产品页面
+5.3 **小红书：距上次采集 >12h？** → XHS 选品采集
+5.5 **小红书：有产品没笔记 + API 额还有？** → 生成种草笔记
+5.6 **小红书：有草稿？** → 发布笔记
+9. **数据库为空？** → 种子数据（从 CONFIG 提取关键词）
 
 ## 安全原则
 
