@@ -82,6 +82,47 @@ XHS 选品采集 → 种草笔记生成 → HTML 页面发布
 ### 2026热门赛道
 养生日常化 | 头皮护理 | 智能可穿戴 | 宠物户外装备 | 手工串珠 | 香氛玩偶 | 中式滋补 | 功能沙发
 
+### 6. 🆕 小红书真实发文 (AutoPost)
+
+**首次使用需要登录**:
+```bash
+# CDP 模式（推荐，零风控）
+chrome.exe --remote-debugging-port=9222          # 启动 Chrome
+# 手动登录 creator.xiaohongshu.com
+node modules/xiaohongshu/auto-poster.js --post --cdp  # 连接已有 Chrome 发文
+
+# 独立模式
+node modules/xiaohongshu/auto-poster.js --login  # 扫码登录 → Cookie 持久化
+node modules/xiaohongshu/auto-poster.js --post    # 自动发文
+```
+
+**发文流程**（全自动）:
+```
+xhs-inventory.json (status=published, !postedToXHS)
+  → 检查 Cookie 有效性
+  → Canvas 生成封面图 (3:4 小红书比例)
+  → 打开 creator.xiaohongshu.com/publish/publish
+  → 上传图片 → 填写标题(≤20字) → 正文(≤1000字)
+  → 添加话题标签 → 点击发布
+  → 写入发布日志 xhs-post-log.json
+```
+
+**安全机制**:
+- 每 8 小时最多执行一次
+- 每次最多发 2 篇
+- CI 环境需 `XHS_POST_ENABLED=true` 才真发
+- 操作间随机延迟 3-8 秒，篇间 30-60 秒
+- Cookie 默认 7-30 天有效，过期自动通知
+
+**限制**:
+| 项 | 限制 |
+|----|------|
+| 每天发文 | ≤3 篇 |
+| 标题 | ≤20 字 |
+| 正文 | ≤1000 字 |
+| 图片 | 1 张（自动生成封面） |
+| 话题标签 | 1-3 个 |
+
 ## 决策规则
 
 当用户让你操作 auto-earn 系统时，按以下优先级行事：

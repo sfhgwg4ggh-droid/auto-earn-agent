@@ -58,6 +58,7 @@ async function loadState() {
       lastXHSScrapeAt: null,
       lastXHSGenerateAt: null,
       lastXHSPublishAt: null,
+      lastXHSPostAt: null,
       lastErrorAt: null,
       consecutiveErrors: 0,
       apiCallsToday: 0,
@@ -287,17 +288,38 @@ async function decide(state, config) {
   }
 
   // ----------------------------------------
-  // 优先级 5.6: 小红书笔记发布 (有草稿立即发)
+  // 优先级 5.6: 小红书笔记发布到静态站 (有草稿立即发)
   // ----------------------------------------
   const xhsDrafts = xhsInventory.filter(c => c.status === 'draft' || !c.publishedAt);
   if (xhsDrafts.length > 0) {
     actions.push({
       priority: 5.6,
       action: 'xhs-publish',
-      reason: `${xhsDrafts.length} 篇小红书草稿待发布`,
+      reason: `${xhsDrafts.length} 篇小红书草稿待发布到静态站`,
       data: { drafts: xhsDrafts.length },
     });
   }
+
+  // ----------------------------------------
+  // 优先级 5.7: 小红书真实发文 (每天1-2篇，已登录+有已发布笔记未推送)
+  // ----------------------------------------
+  const hoursSinceXHSPost = state.lastXHSPostAt
+    ? (now - new Date(state.lastXHSPostAt)) / 3600000
+    : Infinity;
+
+  const xhsReadyToPost = xhsInventory.filter(c =>
+    c.status === 'published' && !c.postedToXHS
+  );
+
+  if (xhsReadyToPost.length > 0 && hoursSinceXHSPost > 8) {
+    actions.push({
+      priority: 5.7,
+      action: 'xhs-post',
+      reason: `${xhsReadyToPost.length} 篇笔记待推送真实小红书, 距上次 ${hoursSinceXHSPost.toFixed(1)}h`,
+      data: { ready: xhsReadyToPost.length },
+    });
+  }
+
 
   // ----------------------------------------
   // 优先级 9: 内容库存不足 → 建议补充关键词
@@ -420,6 +442,21 @@ async function executeXHSPublish(state) {
     console.log(`[XHS-Publish] ✅ 发布 ${result.published} 篇笔记`);
   } catch (err) {
     console.error('[XHS-Publish] ❌ Failed:', err.message);
+    state.consecutiveErrors++;
+    state.lastErrorAt = new Date().toISOString();
+  }
+}
+
+async function executeXHSPost(state) {
+  console.log('\n📲 [XHS-Post] 推送笔记到真实小红书...');
+  try {
+    const { autoPostToXHS } = await import('./modules/xiaohongshu/auto-poster.js');
+    const result = await autoPostToXHS({ maxPosts: 2 });
+    state.lastXHSPostAt = new Date().toISOString();
+    state.consecutiveErrors = 0;
+    console.log(`[XHS-Post] ✅ 推送 ${result.posted} 篇到小红书`);
+  } catch (err) {
+    console.error('[XHS-Post] ❌ Failed:', err.message);
     state.consecutiveErrors++;
     state.lastErrorAt = new Date().toISOString();
   }
@@ -666,6 +703,7 @@ async function main() {
       lastXHSScrapeAt: null,
       lastXHSGenerateAt: null,
       lastXHSPublishAt: null,
+      lastXHSPostAt: null,
       lastErrorAt: null,
       consecutiveErrors: 0,
       apiCallsToday: 0,
@@ -725,6 +763,7 @@ async function main() {
       case 'xhs-scrape':   await executeXHSScrape(state); break;
       case 'xhs-generate': await executeXHSGenerate(state, CONFIG); break;
       case 'xhs-publish':  await executeXHSPublish(state); break;
+      case 'xhs-post':     await executeXHSPost(state); break;
       case 'keywords':     await executeKeywords(state); break;
       case 'sitemap':      await executeSitemap(state); break;
       case 'revenue':      await executeRevenue(state); break;
