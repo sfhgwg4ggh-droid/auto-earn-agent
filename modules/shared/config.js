@@ -29,7 +29,7 @@ export const CONFIG = {
     model: process.env.ANTHROPIC_MODEL || 'DeepSeek-V4-flash',
     fallbackModel: process.env.ANTHROPIC_FALLBACK_MODEL || 'DeepSeek-V4-pro[1m]',
     maxTokens: 8000,
-    dailyLimit: 5,           // 每天最多生成 N 篇，防止 API 费用失控
+    dailyLimit: 15,          // 每天最多生成 N 篇，防止 API 费用失控
   },
 
   // 内容策略

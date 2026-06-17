@@ -238,7 +238,147 @@ export async function loginToXHS(useCDP = false) {
 // ============================================================
 
 /**
- * 发布一篇小红书笔记
+ * 用已有 context 发布笔记（浏览器复用，不管理生命周期）
+ */
+async function postToXHSWithContext(context, note, opts = {}) {
+  const { dryRun = false } = opts;
+
+  const todayCount = await getTodayPostCount();
+  if (todayCount >= LIMITS.maxPostsPerDay) {
+    console.log(`[XHS Poster] ⛔ 今天已发 ${todayCount}/${LIMITS.maxPostsPerDay}`);
+    return { success: false, reason: 'daily_limit' };
+  }
+
+  const title = (note.title || '').substring(0, LIMITS.maxTitleLen);
+  const body = (note.body || '').substring(0, LIMITS.maxBodyLen);
+  const tags = (note.tags || []).slice(0, 5);
+
+  if (dryRun) {
+    console.log(`   🏜️  预演: "${title}"`);
+    return { success: false, reason: 'dry_run' };
+  }
+
+  const page = await context.newPage();
+  try {
+    // Step 1: 检查登录状态
+    await page.goto('https://creator.xiaohongshu.com/', { waitUntil: 'domcontentloaded', timeout: 20000 });
+    await randomDelay(1000, 2000);
+
+    if (page.url().includes('/login')) {
+      return { success: false, reason: 'not_logged_in' };
+    }
+
+    // Step 2: 打开发布页
+    await page.goto('https://creator.xiaohongshu.com/publish/publish', { waitUntil: 'domcontentloaded', timeout: 20000 });
+    await randomDelay(3000, 5000);
+
+    // Step 3: 生成并上传封面图
+    const imageDataUrl = await generateCoverImage(page, note);
+
+    const fileInput = page.locator('input[type="file"]').first();
+    await fileInput.evaluate(el => { el.style.display = 'block'; });
+
+    const tmpDir = resolve(DATA_DIR, '.tmp');
+    if (!existsSync(tmpDir)) await mkdir(tmpDir, { recursive: true });
+    const tmpFile = resolve(tmpDir, `xhs-cover-${Date.now()}.png`);
+    const base64Data = imageDataUrl.replace(/^data:image\/\w+;base64,/, '');
+    await writeFile(tmpFile, Buffer.from(base64Data, 'base64'));
+
+    await fileInput.setInputFiles(tmpFile);
+    console.log('   🖼️  封面已上传，等待...');
+    await randomDelay(5000, 8000);
+
+    // Step 4: 填标题
+    const titleSel = '.d-text, [placeholder*="标题"], #title, input[placeholder*="标题"]';
+    try {
+      await page.waitForSelector(titleSel, { timeout: 8000 });
+      await page.locator(titleSel).first().click();
+      await randomDelay(300, 800);
+      await page.keyboard.type(title, { delay: 60 });
+      console.log(`   ✍️  标题: ${title}`);
+    } catch {
+      console.log('   ⚠️  找不到标题输入框');
+      return { success: false, reason: 'no_title_input' };
+    }
+
+    // Step 5: 填正文
+    const editorSel = '.ql-editor, [contenteditable="true"], [placeholder*="内容"]';
+    try {
+      await page.locator(editorSel).first().click({ timeout: 5000 });
+    } catch {
+      await page.keyboard.press('Tab');
+    }
+    await randomDelay(500, 1000);
+    await page.keyboard.type(body, { delay: 40 });
+    console.log(`   ✍️  正文已填写 (${body.length} 字)`);
+
+    // Step 6: 标签
+    if (tags.length > 0) {
+      const addTagBtn = page.getByText('添加话题').first();
+      if (await addTagBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+        await addTagBtn.click();
+        await randomDelay(800, 1500);
+        const searchInput = page.locator('input[placeholder*="搜索"]').first();
+        if (await searchInput.isVisible({ timeout: 2000 }).catch(() => false)) {
+          await searchInput.fill(tags[0]);
+          await randomDelay(1000, 2000);
+          const firstResult = page.locator('[class*="topic"]').first();
+          if (await firstResult.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await firstResult.click();
+            console.log(`   🏷️  标签: #${tags[0]}`);
+          }
+        }
+      }
+    }
+
+    // Step 7: 发布
+    console.log('   🚀 点击发布...');
+    await randomDelay(2000, 3000);
+
+    const publishBtns = [
+      page.locator('.publishBtn').first(),
+      page.locator('button:has-text("发布")').first(),
+      page.getByRole('button', { name: /发布/ }).first(),
+      page.locator('[class*="publish-btn"]').first(),
+    ];
+
+    let clicked = false;
+    for (const btn of publishBtns) {
+      try {
+        if (await btn.isVisible({ timeout: 2000 })) {
+          await btn.click();
+          clicked = true;
+          break;
+        }
+      } catch {}
+    }
+    if (!clicked) {
+      await page.keyboard.press('Control+Enter');
+    }
+
+    await randomDelay(5000, 8000);
+
+    // 日志
+    const log = await loadPostLog();
+    log.posts.push({ noteSlug: note.slug, title, postedAt: new Date().toISOString(), status: 'submitted' });
+    log.totalPosts++;
+    await savePostLog(log);
+
+    try { await import('fs/promises').then(m => m.rm(tmpFile)); } catch {}
+    console.log('   ✅ 已提交');
+
+    return { success: true, title, postedAt: new Date().toISOString() };
+
+  } catch (err) {
+    console.error('   ❌ 失败:', err.message);
+    return { success: false, reason: 'error', error: err.message };
+  } finally {
+    await page.close().catch(() => {});
+  }
+}
+
+/**
+ * 发布一篇小红书笔记（独立模式，管理浏览器生命周期）
  * @param {object} note - 来自 xhs-inventory.json 的笔记数据
  * @param {object} opts
  * @param {boolean} opts.dryRun - 预演模式，只预览不真发
@@ -424,8 +564,33 @@ export async function postToXHS(note, opts = {}) {
     console.log('   🚀 点击发布...');
     await randomDelay(2000, 3000);
 
-    const publishBtn = page.getByRole('button', { name: /发布/ }).first();
-    await publishBtn.click();
+    // 尝试多个发布按钮选择器（小红书 creator 平台经常改版）
+    const publishSelectors = [
+      page.getByRole('button', { name: /发布/ }).first(),
+      page.locator('.publishBtn').first(),
+      page.locator('button:has-text("发布")').first(),
+      page.locator('.submit-btn').first(),
+      page.locator('[class*="publish"]').first(),
+      page.locator('button:has-text("提交")').first(),
+    ];
+
+    let clicked = false;
+    for (const btn of publishSelectors) {
+      try {
+        if (await btn.isVisible({ timeout: 3000 })) {
+          await btn.click();
+          clicked = true;
+          break;
+        }
+      } catch {}
+    }
+
+    if (!clicked) {
+      // 终极 fallback：按 Enter 提交
+      console.log('   ⚠️  未找到发布按钮，尝试键盘提交...');
+      await page.keyboard.press('Control+Enter');
+      await randomDelay(1000, 2000);
+    }
 
     console.log('   ⏳ 等待发布结果...');
     await randomDelay(5000, 8000);
@@ -515,27 +680,57 @@ export async function autoPostToXHS(opts = {}) {
   }
 
   let posted = 0;
-  for (let i = 0; i < toPost.length; i++) {
-    const note = toPost[i];
-    console.log(`\n[${i + 1}/${toPost.length}]`);
 
-    const result = await postToXHS(note, { useCDP });
-
-    if (result.success) {
-      posted++;
-      // 标记已发布
-      note.postedToXHS = true;
-      note.xhsPostedAt = new Date().toISOString();
+  // 复用同一个浏览器发多篇
+  let browser, context;
+  try {
+    if (useCDP) {
+      browser = await chromium.connectOverCDP('http://localhost:9222');
+      context = browser.contexts()[0];
     } else {
-      console.log(`   ⛔ 跳过: ${result.reason || '未知原因'}`);
+      if (!existsSync(COOKIE_FILE)) {
+        console.log('[XHS AutoPost] ❌ 未登录，请先 --login');
+        return { posted: 0, reason: 'not_logged_in' };
+      }
+      browser = await chromium.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-blink-features=AutomationControlled', '--disable-dev-shm-usage'],
+      });
+      context = await browser.newContext({
+        storageState: COOKIE_FILE,
+        viewport: { width: 1440, height: 900 },
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0.0.0 Safari/537.36',
+      });
+      await context.addInitScript(() => {
+        Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+      });
     }
 
-    // 篇间间隔
-    if (i < toPost.length - 1) {
-      const wait = 30000 + Math.floor(Math.random() * 30000); // 30-60 秒
-      console.log(`   ⏳ 等待 ${Math.round(wait / 1000)} 秒后发下一篇...`);
-      await new Promise(r => setTimeout(r, wait));
+    for (let i = 0; i < toPost.length; i++) {
+      const note = toPost[i];
+      console.log(`\n[${i + 1}/${toPost.length}]`);
+
+      const result = await postToXHSWithContext(context, note, { dryRun });
+
+      if (result.success) {
+        posted++;
+        note.postedToXHS = true;
+        note.xhsPostedAt = new Date().toISOString();
+      } else {
+        console.log(`   ⛔ 跳过: ${result.reason || '未知原因'}`);
+        // 如果是登录失效，后续全部跳过
+        if (result.reason === 'not_logged_in') break;
+      }
+
+      // 篇间间隔
+      if (i < toPost.length - 1) {
+        const wait = 30000 + Math.floor(Math.random() * 30000);
+        console.log(`   ⏳ 等待 ${Math.round(wait / 1000)} 秒后发下一篇...`);
+        await new Promise(r => setTimeout(r, wait));
+      }
     }
+  } finally {
+    if (!useCDP && browser) await browser.close().catch(() => {});
   }
 
   // 更新 inventory
