@@ -121,18 +121,26 @@ async function decide(state, config) {
   }
 
   // ----------------------------------------
-  // 优先级 2: 有产品但没内容 → 生成
+  // 优先级 2: 有内容需求 → 生成
+  // 来源 2a: 产品需要内容  来源 2b: 关键词待处理（即使无产品数据也能生成）
   // ----------------------------------------
   const coveredKeywords = new Set(inventory.map(c => c.keyword));
   const productsNeedingContent = products.filter(p => !coveredKeywords.has(p.keyword));
+  const pendingKeywords = keywords.filter(k => {
+    const kw = k.keyword || k;
+    return k.status === 'pending' || !coveredKeywords.has(kw);
+  });
   const apiRemaining = config.anthropic.dailyLimit - state.apiCallsToday;
 
-  if (productsNeedingContent.length > 0 && apiRemaining > 0) {
+  if (apiRemaining > 0 && (productsNeedingContent.length > 0 || pendingKeywords.length > 0)) {
+    const source = productsNeedingContent.length > 0
+      ? `${productsNeedingContent.length} products`
+      : `${pendingKeywords.length} pending keywords`;
     actions.push({
       priority: 2,
       action: 'generate',
-      reason: `${productsNeedingContent.length} products need content, ${apiRemaining} API calls remaining today`,
-      data: { productsCount: productsNeedingContent.length, apiRemaining },
+      reason: `${source} need content, ${apiRemaining} API calls remaining today`,
+      data: { productsCount: productsNeedingContent.length, keywordsCount: pendingKeywords.length, apiRemaining },
     });
   } else if (productsNeedingContent.length > 0 && apiRemaining <= 0) {
     console.log(`[Agent] ⏸️  ${productsNeedingContent.length} products need content but daily API limit reached.`);
