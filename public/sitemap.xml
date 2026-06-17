@@ -1,31 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>autoearn.pages.dev/</loc>
+    <loc>zhushishunsui.cloud/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     
   </url>
   <url>
-    <loc>autoearn.pages.dev/blog/</loc>
+    <loc>zhushishunsui.cloud/blog/</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     
   </url>
   <url>
-    <loc>autoearn.pages.dev/products/</loc>
+    <loc>zhushishunsui.cloud/products/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     
   </url>
   <url>
-    <loc>autoearn.pages.dev/pet-supplies/best-dog-bed-for-large-dogs.html</loc>
+    <loc>zhushishunsui.cloud/pet-supplies/best-dog-bed-for-large-dogs.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <lastmod>2026-06-17</lastmod>
   </url>
   <url>
-    <loc>autoearn.pages.dev/pet-supplies/automatic-cat-feeder-review.html</loc>
+    <loc>zhushishunsui.cloud/pet-supplies/automatic-cat-feeder-review.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2026-06-17</lastmod>
+  </url>
+  <url>
+    <loc>zhushishunsui.cloud/home-garden/best-robot-vacuum-for-pet-hair.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2026-06-17</lastmod>
+  </url>
+  <url>
+    <loc>zhushishunsui.cloud/home-garden/air-purifier-for-allergies-review.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <lastmod>2026-06-17</lastmod>
