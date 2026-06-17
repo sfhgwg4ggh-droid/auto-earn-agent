@@ -1,9 +1,9 @@
 {
   "startedAt": "2026-06-17T23:01:22.659Z",
-  "totalRuns": 7,
+  "totalRuns": 8,
   "totalErrors": 0,
   "lastScrapeAt": "2026-06-17T23:03:33.412Z",
-  "lastGenerateAt": "2026-06-17T23:23:24.813Z",
+  "lastGenerateAt": "2026-06-17T23:29:25.650Z",
   "lastPublishAt": "2026-06-17T23:23:24.765Z",
   "lastMonitorAt": null,
   "lastKeywordsAt": "2026-06-17T23:01:28.013Z",
@@ -12,7 +12,8 @@
   "lastAutoListAt": null,
   "lastErrorAt": "2026-06-17T23:01:22.929Z",
   "consecutiveErrors": 0,
-  "apiCallsToday": 2,
+  "apiCallsToday": 7,
   "apiCallDate": "2026-06-17",
-  "lastXHSScrapeAt": "2026-06-17T23:24:45.780Z"
+  "lastXHSScrapeAt": "2026-06-17T23:24:45.780Z",
+  "lastXHSGenerateAt": "2026-06-17T23:29:59.985Z"
 }
