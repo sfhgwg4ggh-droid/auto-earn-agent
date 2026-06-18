@@ -1,0 +1,247 @@
+{
+  "date": "2026-06-18",
+  "topPicks": [
+    {
+      "product": "宠物肖像定制 手绘",
+      "wholesale": "¥0",
+      "retail": "¥88",
+      "profit": "¥88",
+      "margin": "100%",
+      "recommendation": "🔥 强烈推荐 — 零成本数字商品",
+      "platform": "小红书+闲鱼",
+      "type": "digital"
+    },
+    {
+      "product": "宠物画像 数字插画",
+      "wholesale": "¥0",
+      "retail": "¥68",
+      "profit": "¥68",
+      "margin": "100%",
+      "recommendation": "🔥 零成本高利润",
+      "platform": "小红书+Etsy",
+      "type": "digital"
+    },
+    {
+      "product": "宠物纪念品 定制摆件",
+      "wholesale": "¥18",
+      "retail": "¥60",
+      "profit": "¥42",
+      "margin": "70%",
+      "recommendation": "✅ 值得做",
+      "platform": "淘宝+闲鱼",
+      "type": "physical"
+    },
+    {
+      "product": "定制海报 宠物 装饰画",
+      "wholesale": "¥0",
+      "retail": "¥39",
+      "profit": "¥39",
+      "margin": "100%",
+      "recommendation": "🔥 走量款",
+      "platform": "小红书+闲鱼",
+      "type": "digital"
+    },
+    {
+      "product": "宠物骨灰盒 纪念 木质",
+      "wholesale": "¥20",
+      "retail": "¥50",
+      "profit": "¥30",
+      "margin": "60%",
+      "recommendation": "✅ 可做",
+      "platform": "淘宝",
+      "type": "physical"
+    },
+    {
+      "product": "宠物脚印 纪念品 DIY",
+      "wholesale": "¥20",
+      "retail": "¥50",
+      "profit": "¥30",
+      "margin": "60%",
+      "recommendation": "✅ 可做",
+      "platform": "小红书+闲鱼",
+      "type": "physical"
+    },
+    {
+      "product": "宠物抱枕定制 照片打印",
+      "wholesale": "¥20",
+      "retail": "¥50",
+      "profit": "¥30",
+      "margin": "60%",
+      "recommendation": "✅ 可做",
+      "platform": "淘宝+拼多多",
+      "type": "physical"
+    },
+    {
+      "product": "手工DIY照片书 纪念册",
+      "wholesale": "¥20",
+      "retail": "¥50",
+      "profit": "¥30",
+      "margin": "60%",
+      "recommendation": "✅ 可做",
+      "platform": "小红书+淘宝",
+      "type": "physical"
+    },
+    {
+      "product": "宠物项圈 定制刻字",
+      "wholesale": "¥8",
+      "retail": "¥35",
+      "profit": "¥27",
+      "margin": "77%",
+      "recommendation": "✅ 值得做",
+      "platform": "闲鱼+拼多多",
+      "type": "physical"
+    },
+    {
+      "product": "狗牌定制 激光刻字",
+      "wholesale": "¥5",
+      "retail": "¥25",
+      "profit": "¥20",
+      "margin": "80%",
+      "recommendation": "🔥 暴力利润",
+      "platform": "淘宝+闲鱼",
+      "type": "physical"
+    }
+  ],
+  "byCategory": {
+    "pet-art": [
+      {
+        "title": "宠物肖像定制 手绘",
+        "price": 0,
+        "retailPrice": 88,
+        "profit": 88,
+        "profitMargin": "100%",
+        "type": "digital",
+        "recommendation": "🔥 强烈推荐 — 零成本数字商品",
+        "category": "pet-art",
+        "targetPlatform": "小红书+闲鱼",
+        "source": "estimate",
+        "sourcedAt": "2026-06-18T00:51:55.724Z"
+      },
+      {
+        "title": "宠物画像 数字插画",
+        "price": 0,
+        "retailPrice": 68,
+        "profit": 68,
+        "profitMargin": "100%",
+        "type": "digital",
+        "recommendation": "🔥 零成本高利润",
+        "category": "pet-art",
+        "targetPlatform": "小红书+Etsy",
+        "source": "estimate",
+        "sourcedAt": "2026-06-18T00:52:26.704Z"
+      },
+      {
+        "title": "定制海报 宠物 装饰画",
+        "price": 0,
+        "retailPrice": 39,
+        "profit": 39,
+        "profitMargin": "100%",
+        "type": "digital",
+        "recommendation": "🔥 走量款",
+        "category": "pet-art",
+        "targetPlatform": "小红书+闲鱼",
+        "source": "estimate",
+        "sourcedAt": "2026-06-18T00:53:09.897Z"
+      }
+    ],
+    "pet-memorial": [
+      {
+        "title": "宠物纪念品 定制摆件",
+        "price": 18,
+        "retailPrice": 60,
+        "profit": 42,
+        "profitMargin": "70%",
+        "type": "physical",
+        "recommendation": "✅ 值得做",
+        "category": "pet-memorial",
+        "targetPlatform": "淘宝+闲鱼",
+        "source": "estimate",
+        "sourcedAt": "2026-06-18T00:52:03.547Z"
+      },
+      {
+        "title": "宠物骨灰盒 纪念 木质",
+        "price": 20,
+        "retailPrice": 50,
+        "profit": 30,
+        "profitMargin": "60%",
+        "type": "physical",
+        "recommendation": "✅ 可做",
+        "category": "pet-memorial",
+        "targetPlatform": "淘宝",
+        "source": "estimate",
+        "sourcedAt": "2026-06-18T00:52:36.781Z"
+      },
+      {
+        "title": "宠物脚印 纪念品 DIY",
+        "price": 20,
+        "retailPrice": 50,
+        "profit": 30,
+        "profitMargin": "60%",
+        "type": "physical",
+        "recommendation": "✅ 可做",
+        "category": "pet-memorial",
+        "targetPlatform": "小红书+闲鱼",
+        "source": "estimate",
+        "sourcedAt": "2026-06-18T00:52:44.167Z"
+      }
+    ],
+    "pet-products": [
+      {
+        "title": "宠物抱枕定制 照片打印",
+        "price": 20,
+        "retailPrice": 50,
+        "profit": 30,
+        "profitMargin": "60%",
+        "type": "physical",
+        "recommendation": "✅ 可做",
+        "category": "pet-products",
+        "targetPlatform": "淘宝+拼多多",
+        "source": "estimate",
+        "sourcedAt": "2026-06-18T00:52:52.644Z"
+      }
+    ],
+    "sentimental": [
+      {
+        "title": "手工DIY照片书 纪念册",
+        "price": 20,
+        "retailPrice": 50,
+        "profit": 30,
+        "profitMargin": "60%",
+        "type": "physical",
+        "recommendation": "✅ 可做",
+        "category": "sentimental",
+        "targetPlatform": "小红书+淘宝",
+        "source": "estimate",
+        "sourcedAt": "2026-06-18T00:53:01.926Z"
+      }
+    ],
+    "pet-accessories": [
+      {
+        "title": "宠物项圈 定制刻字",
+        "price": 8,
+        "retailPrice": 35,
+        "profit": 27,
+        "profitMargin": "77%",
+        "type": "physical",
+        "recommendation": "✅ 值得做",
+        "category": "pet-accessories",
+        "targetPlatform": "闲鱼+拼多多",
+        "source": "estimate",
+        "sourcedAt": "2026-06-18T00:52:11.344Z"
+      },
+      {
+        "title": "狗牌定制 激光刻字",
+        "price": 5,
+        "retailPrice": 25,
+        "profit": 20,
+        "profitMargin": "80%",
+        "type": "physical",
+        "recommendation": "🔥 暴力利润",
+        "category": "pet-accessories",
+        "targetPlatform": "淘宝+闲鱼",
+        "source": "estimate",
+        "sourcedAt": "2026-06-18T00:52:18.457Z"
+      }
+    ]
+  }
+}

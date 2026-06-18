@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>📱 今日发布清单</title>
+<style>
+:root{--bg:#fefce8;--card:#fff;--border:#fde68a;--primary:#f97316;--text:#292524;--text2:#78716c;--font:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);max-width:700px;margin:0 auto;padding:16px;line-height:1.6}
+.header{background:linear-gradient(135deg,#f97316,#ef4444);color:#fff;padding:32px 20px;border-radius:12px;text-align:center;margin-bottom:20px}
+.header h1{font-size:22px;margin-bottom:8px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.card-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.card-header .icon{font-size:24px}
+.card-header .platform{font-weight:700;font-size:16px}
+.card-header .type{font-size:12px;color:var(--text2);margin-left:auto;background:#fef3c7;padding:2px 8px;border-radius:8px}
+.copy-btn{font-family:var(--font);font-size:12px;padding:6px 14px;border-radius:20px;border:1px solid var(--primary);background:#fff;color:var(--primary);cursor:pointer;font-weight:600;transition:all .15s;white-space:nowrap}
+.copy-btn:hover{background:var(--primary);color:#fff}
+.copy-btn.copied{background:#22c55e;color:#fff;border-color:#22c55e}
+.content-box{background:#faf8f4;border-radius:8px;padding:12px;font-size:13px;line-height:1.8;max-height:300px;overflow-y:auto;white-space:pre-wrap;margin-bottom:8px}
+.field{margin-bottom:10px}
+.field-label{font-size:11px;color:var(--text2);font-weight:600;margin-bottom:4px;text-transform:uppercase}
+.tags{display:flex;flex-wrap:wrap;gap:4px}
+.tag{background:#fff0f3;color:#ff2442;font-size:11px;padding:2px 8px;border-radius:10px}
+.image-note{font-size:11px;color:var(--text2);background:#fff;border:1px dashed #ddd;border-radius:8px;padding:8px;margin-top:8px}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--primary);color:#fff;font-size:12px;font-weight:700;margin-right:8px}
+.footer{text-align:center;padding:24px;color:var(--text2);font-size:12px}
+.auto-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;background:#dcfce7;color:#166534;padding:2px 8px;border-radius:8px;margin-top:8px}
+</style></head>
+<body>
+
+<div class="header">
+  <h1>📱 今日发布清单</h1>
+  <p id="dateLabel">加载中...</p>
+  <div class="auto-badge">🤖 Auto-Earn Agent 自动生成</div>
+</div>
+
+<div id="content"></div>
+
+<div class="footer">
+  ⚡ 每日自动生成 · GitHub Actions 每天 UTC 23:00 运行<br>
+  打开本页面 → 复制 → 粘贴到 App → 发布 = 1分钟
+</div>
+
+<script>
+async function load() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('dateLabel').textContent = '📅 ' + today;
+
+  try {
+    const xhsResp = await fetch('data/social/xhs-posts.json');
+    const xhsPosts = await xhsResp.json();
+    const xyResp = await fetch('data/social/xianyu-listings.json');
+    const xyListings = await xyResp.json();
+
+    const todayXHS = xhsPosts.filter(p => p.createdAt?.startsWith(today));
+    const todayXY = xyListings.filter(l => l.createdAt?.startsWith(today));
+
+    let html = '';
+
+    if (todayXHS.length === 0 && todayXY.length === 0) {
+      html += '<div class="card" style="text-align:center;padding:32px"><p style="color:var(--text2)">今日内容尚未生成</p><p style="font-size:12px;color:var(--text2)">运行: node modules/social/social-pipeline.js</p></div>';
+    }
+
+    // 小红书
+    for (const p of todayXHS) {
+      const fullBody = p.body + '\n\n' + (p.monetization || '');
+      html += `
+      <div class="card" id="xhs-${p.id}">
+        <div class="card-header">
+          <span class="icon">📕</span>
+          <span class="platform">小红书 · 种草笔记</span>
+          <span class="type">${p.contentType || 'emotional'}</span>
+          <button class="copy-btn" onclick="copyAll('xhs-${p.id}')">📋 一键复制全文</button>
+        </div>
+        <div class="field">
+          <div class="field-label">📝 标题</div>
+          <div class="content-box">${esc(p.title)}</div>
+        </div>
+        <div class="field">
+          <div class="field-label">📄 正文</div>
+          <div class="content-box">${esc(fullBody)}</div>
+        </div>
+        <div class="field">
+          <div class="field-label">🏷️ 标签</div>
+          <div class="tags">${(p.tags||[]).map(t=>'<span class="tag">#'+t+'</span>').join('')}</div>
+        </div>
+        ${p.coverImage ? `<div class="field"><div class="field-label">🖼️ 封面图（已自动生成）</div><img src="${p.coverImage}" style="width:100%;max-width:300px;border-radius:8px;border:1px solid var(--border);cursor:pointer" onclick="window.open(this.src)" title="点击放大"><br><small style="color:var(--text2)">右键保存图片 → 发小红书时上传</small></div>` : `<div class="image-note">📸 配图建议: ${esc(p.imageDirection || '宠物肖像精美实物照 + 暖色调滤镜')}</div>`}
+        <div style="margin-top:8px;font-size:11px;color:var(--text2)">
+          <span class="step-num">1</span>右键保存封面图 → <span class="step-num">2</span>复制标题和正文 → <span class="step-num">3</span>打开小红书App → <span class="step-num">4</span>点+号发笔记 → <span class="step-num">5</span>粘贴+上传图 → <span class="step-num">6</span>加标签 → <span class="step-num">7</span>发布 ✅
+        </div>
+      </div>`;
+    }
+
+    // 闲鱼
+    for (const l of todayXY) {
+      html += `
+      <div class="card" id="xy-${l.id}">
+        <div class="card-header">
+          <span class="icon">🐟</span>
+          <span class="platform">闲鱼 · 商品 Listing</span>
+          <span class="type">¥${l.price}</span>
+          <button class="copy-btn" onclick="copyAll('xy-${l.id}')">📋 一键复制全文</button>
+        </div>
+        <div class="field">
+          <div class="field-label">🏷️ 标题</div>
+          <div class="content-box">${esc(l.title)}</div>
+        </div>
+        <div class="field">
+          <div class="field-label">📄 描述</div>
+          <div class="content-box">${esc(l.description || '')}</div>
+        </div>
+        <div class="field">
+          <div class="field-label">💰 价格: ¥${l.price}</div>
+        </div>
+        <div class="field">
+          <div class="field-label">🏷️ 标签</div>
+          <div class="tags">${(l.tags||[]).map(t=>'<span class="tag">#'+t+'</span>').join('')}</div>
+        </div>
+        ${l.coverImage ? `<div class="field"><div class="field-label">🖼️ 商品图（已自动生成）</div><img src="${l.coverImage}" style="width:100%;max-width:300px;border-radius:8px;border:1px solid var(--border);cursor:pointer" onclick="window.open(this.src)" title="点击放大"><br><small style="color:var(--text2)">右键保存 → 发闲鱼时上传</small></div>` : ''}
+        <div class="image-note">📸 建议再拍: ${(l.images||[]).slice(0,3).join(' / ')}</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--text2)">
+          <span class="step-num">1</span>打开闲鱼App → <span class="step-num">2</span>点+卖闲置 → <span class="step-num">3</span>粘贴标题/描述 → <span class="step-num">4</span>设价格¥${l.price} → <span class="step-num">5</span>上传图片 → <span class="step-num">6</span>发布 ✅
+        </div>
+      </div>`;
+    }
+
+    document.getElementById('content').innerHTML = html || '<div class="card" style="text-align:center;padding:32px"><p>暂无数据</p></div>';
+
+  } catch(e) {
+    document.getElementById('content').innerHTML = '<div class="card" style="text-align:center;padding:32px"><p style="color:var(--text2)">数据加载失败<br>请先运行: node modules/social/social-pipeline.js</p></div>';
+  }
+}
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function copyAll(cardId) {
+  const card = document.getElementById(cardId);
+  if (!card) return;
+  const boxes = card.querySelectorAll('.content-box');
+  const allText = Array.from(boxes).map(b => b.textContent).join('\n\n');
+  navigator.clipboard.writeText(allText).then(() => {
+    const btn = card.querySelector('.copy-btn');
+    btn.textContent = '✅ 已复制';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 一键复制全文'; btn.classList.remove('copied'); }, 2000);
+  }).catch(() => alert('复制失败，请手动选中文字复制'));
+}
+
+load();
+</script>
+</body>
+</html>

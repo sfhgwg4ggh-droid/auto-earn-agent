@@ -1,0 +1,68 @@
+{
+  "updatedAt": "2026-06-18T00:53:25.054Z",
+  "totalPages": 10,
+  "pages": [
+    {
+      "title": "宠物肖像定制多少钱_宠物肖像定制价格|手绘狗狗画像多少钱",
+      "url": "/guide/宠物肖像定制多少钱.html",
+      "intent": "buy",
+      "volume": 1800
+    },
+    {
+      "title": "手绘宠物画像价格_宠物肖像定制价格|手绘狗狗画像多少钱",
+      "url": "/guide/手绘宠物画像价格.html",
+      "intent": "buy",
+      "volume": 1200
+    },
+    {
+      "title": "狗狗画像定制哪家好_宠物肖像定制价格|手绘狗狗画像多少钱",
+      "url": "/guide/狗狗画像定制哪家好.html",
+      "intent": "buy",
+      "volume": 900
+    },
+    {
+      "title": "宠物纪念品定制推荐_宠物肖像定制价格|手绘狗狗画像多少钱",
+      "url": "/guide/宠物纪念品定制推荐.html",
+      "intent": "buy",
+      "volume": 800
+    },
+    {
+      "title": "把狗狗照片画成画_宠物肖像定制价格|手绘狗狗画像多少钱",
+      "url": "/guide/把狗狗照片画成画.html",
+      "intent": "buy",
+      "volume": 2500
+    },
+    {
+      "title": "rainbow bridge 宠物纪念_宠物肖像定制价格|手绘狗狗画像多少钱",
+      "url": "/guide/rainbow-bridge-宠物纪念.html",
+      "intent": "buy",
+      "volume": 800
+    },
+    {
+      "title": "送养狗的朋友什么礼物_宠物肖像定制价格|手绘狗狗画像多少钱",
+      "url": "/guide/送养狗的朋友什么礼物.html",
+      "intent": "buy",
+      "volume": 2200
+    },
+    {
+      "title": "闺蜜宠物死了送什么_宠物肖像定制价格|手绘狗狗画像多少钱",
+      "url": "/guide/闺蜜宠物死了送什么.html",
+      "intent": "buy",
+      "volume": 1100
+    },
+    {
+      "title": "宠物主题生日礼物_宠物肖像定制价格|手绘狗狗画像多少钱",
+      "url": "/guide/宠物主题生日礼物.html",
+      "intent": "buy",
+      "volume": 1500
+    },
+    {
+      "title": "父亲节送狗爸什么礼物_宠物肖像定制价格|手绘狗狗画像多少钱",
+      "url": "/guide/父亲节送狗爸什么礼物.html",
+      "intent": "buy",
+      "volume": 900
+    }
+  ],
+  "estimatedMonthlyTraffic": 13700,
+  "estimatedMonthlyRevenue": 5000
+}
