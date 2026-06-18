@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"><title>🐾 宠物艺术商店</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;background:#fdfaf3;color:#3d3022;max-width:600px;margin:0 auto;line-height:1.7}
+.header{background:linear-gradient(135deg,#4A7C59,#3A6347);color:#fff;padding:24px 16px;text-align:center;position:sticky;top:0;z-index:10}
+.header h1{font-size:20px;margin-bottom:4px}
+.header p{font-size:12px;opacity:.85}
+.hero{padding:24px 16px;text-align:center;background:linear-gradient(170deg,#fff7ed,#fef3c7)}
+.hero h2{font-size:18px;color:#8b6914;margin-bottom:8px}
+.product-grid{padding:12px;display:flex;flex-direction:column;gap:12px}
+.product{border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06);border:1px solid #f0ebe0}
+.product img{width:100%;display:block;cursor:pointer}
+.product-info{padding:14px 16px}
+.product-name{font-size:16px;font-weight:700;color:#3d3022;margin-bottom:4px}
+.product-desc{font-size:12px;color:#9b8b7e;margin-bottom:10px}
+.product-bottom{display:flex;justify-content:space-between;align-items:center}
+.product-price{font-size:22px;font-weight:800;color:#c0392b}
+.buy-btn{display:inline-block;background:#4A7C59;color:#fff;font-size:14px;font-weight:700;padding:8px 20px;border-radius:20px;text-decoration:none;border:none;cursor:pointer;font-family:inherit}
+.buy-btn:active{background:#3a6348}
+.how-to{padding:24px 16px;background:#f5f1eb;margin:16px;border-radius:12px}
+.how-to h3{font-size:15px;color:#8b6914;margin-bottom:12px}
+.steps{display:flex;flex-direction:column;gap:8px}
+.step{display:flex;align-items:center;gap:10px;font-size:13px;color:#6b5c47}
+.step-num{width:24px;height:24px;border-radius:50%;background:#4A7C59;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.cta-box{background:linear-gradient(135deg,#f97316,#ef4444);color:#fff;margin:16px;padding:20px;border-radius:12px;text-align:center}
+.cta-box h3{font-size:16px;margin-bottom:8px}
+.cta-box .big-btn{display:block;background:#fff;color:#f97316;font-size:16px;font-weight:800;padding:12px;border-radius:24px;text-decoration:none;margin-top:8px}
+.payment-note{font-size:11px;color:#9b8b7e;text-align:center;padding:0 16px 24px;line-height:1.8}
+.wx-copy{background:#f5f1eb;padding:16px;margin:12px 16px;border-radius:12px}
+.wx-copy h4{font-size:13px;color:#8b6914;margin-bottom:8px}
+.wx-copy pre{background:#fff;padding:12px;border-radius:8px;font-size:12px;line-height:1.8;white-space:pre-wrap;font-family:inherit;overflow-x:auto;max-height:300px;overflow-y:auto}
+.copy-alert{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#292524;color:#fff;padding:12px 24px;border-radius:24px;font-size:14px;z-index:99;opacity:0;transition:opacity .3s}
+</style></head>
+<body>
+
+<div class="header">
+  <h1>🐾 PawsomeArt</h1>
+  <p>纯手绘宠物肖像 · 电子版 · 即时交付</p>
+</div>
+
+<div class="hero">
+  <h2>📸 发照片 → 纯手绘 → 永久珍藏</h2>
+  <p style="font-size:13px;color:#8b6914">2-3天出稿 · 改到满意为止 · 电子版秒发</p>
+</div>
+
+<div class="product-grid" id="productGrid"></div>
+
+<div class="how-to">
+  <h3>📋 下单流程</h3>
+  <div class="steps">
+    <div class="step"><span class="step-num">1</span>选择想要的商品</div>
+    <div class="step"><span class="step-num">2</span>扫码支付（支付宝/微信）</div>
+    <div class="step"><span class="step-num">3</span>发付款截图 + 宠物照片</div>
+    <div class="step"><span class="step-num">4</span>2-3天收稿 → 满意 → 发高清文件</div>
+  </div>
+</div>
+
+<div class="wx-copy">
+  <h4>📱 复制这条发朋友圈/微信群</h4>
+  <pre id="wxText">🐾 宠物肖像定制开张啦！
+
+✨ 纯手绘，不是AI生成
+📸 你发照片，我来画
+🔄 改到满意为止
+📥 电子版即时交付
+
+💰 今日特价：
+🎨 定制宠物肖像 ¥88
+😂 狗妈/狗爸定义画 ¥39
+🌈 彩虹桥纪念画 ¥29
+
+📱 扫码下单 or 私信咨询</pre>
+  <button class="buy-btn" onclick="copyWx()" style="width:100%;margin-top:8px;text-align:center">📋 一键复制朋友圈文案</button>
+</div>
+
+<div class="cta-box">
+  <h3>💰 扫码付款下单</h3>
+  <p style="font-size:13px;opacity:.9">付款后发截图 + 宠物照片即可</p>
+  <div style="display:flex;gap:12px;margin-top:12px;justify-content:center">
+    <div style="text-align:center">
+      <img src="images/alipay-qr.png" style="width:120px;border-radius:8px;background:#fff;padding:8px" onerror="this.alt='请将收款码放到 images/alipay-qr.png'">
+      <p style="font-size:10px;margin-top:4px">支付宝</p>
+    </div>
+    <div style="text-align:center">
+      <img src="images/wechat-qr.png" style="width:120px;border-radius:8px;background:#fff;padding:8px" onerror="this.alt='请将收款码放到 images/wechat-qr.png'">
+      <p style="font-size:10px;margin-top:4px">微信支付</p>
+    </div>
+  </div>
+</div>
+
+<p class="payment-note">
+  💡 付款后截图发给客服 → 开始定制 → 2-3天出稿<br>
+  所有商品均为电子版数字文件，自己打印装裱<br>
+  🛡️ 不满意全额退款 · 信任保障
+</p>
+
+<div class="copy-alert" id="copyAlert">✅ 已复制！去朋友圈粘贴</div>
+
+<script>
+const products = [
+  {id:'custom-pet-portrait',name:'定制宠物肖像',price:'¥88',emoji:'🎨',desc:'纯手绘·发照片→2天出稿·电子版',img:'images/shop/定制宠物肖像.png'},
+  {id:'dog-mom-definition-print',name:'狗妈定义画',price:'¥39',emoji:'😂',desc:'搞笑装饰画·电子版·下单秒发',img:'images/shop/狗妈定义画.png'},
+  {id:'dog-dad-definition-print',name:'狗爸定义画',price:'¥39',emoji:'🐕',desc:'养狗男人的真实写照·秒发',img:'images/shop/狗爸定义画.png'},
+  {id:'pet-memorial-print',name:'彩虹桥纪念画',price:'¥29',emoji:'🌈',desc:'最温柔的告别·个性化定制',img:'images/shop/彩虹桥纪念画.png'},
+  {id:'pet-birth-stats-print',name:'宠物出生证',price:'¥29',emoji:'📋',desc:'毛孩子专属身份卡·秒发',img:'images/shop/宠物出生证.png'},
+  {id:'custom-family-pet-portrait',name:'全家福加宠物',price:'¥168',emoji:'👨‍👩‍👧‍👦',desc:'一家人的温暖画像·3-5天出稿',img:'images/shop/全家福加宠物.png'},
+];
+
+document.getElementById('productGrid').innerHTML = products.map(p => `
+  <div class="product">
+    <img src="${p.img}" alt="${p.name}" onclick="this.requestFullscreen?this.requestFullscreen():window.open(this.src)" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22800%22 height=%22800%22><rect fill=%22%23fdfaf3%22 width=%22800%22 height=%22800%22/><text x=%22400%22 y=%22400%22 text-anchor=%22middle%22 font-size=%2280%22>${p.emoji}</text><text x=%22400%22 y=%22480%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2232%22 fill=%22%235c4033%22>${p.name}</text></svg>'">
+    <div class="product-info">
+      <div class="product-name">${p.emoji} ${p.name}</div>
+      <div class="product-desc">${p.desc}</div>
+      <div class="product-bottom">
+        <span class="product-price">${p.price}</span>
+        <button class="buy-btn" onclick="buy('${p.id}','${p.name}','${p.price}')">立即购买</button>
+      </div>
+    </div>
+  </div>
+`).join('');
+
+function buy(id, name, price) {
+  const q = confirm('💳 购买「' + name + '」' + price + '\n\n点击确定 → 查看付款方式\n扫码付款后发截图即可');
+  if (q) window.scrollTo(0, document.querySelector('.cta-box').offsetTop - 100);
+}
+
+function copyWx() {
+  const text = document.getElementById('wxText').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const el = document.getElementById('copyAlert');
+    el.style.opacity = '1';
+    setTimeout(() => el.style.opacity = '0', 2000);
+  });
+}
+</script>
+</body>
+</html>

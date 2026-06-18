@@ -272,21 +272,26 @@ async function postToXHSWithContext(context, note, opts = {}) {
     await page.goto('https://creator.xiaohongshu.com/publish/publish', { waitUntil: 'domcontentloaded', timeout: 20000 });
     await randomDelay(2000, 3000);
 
-    // 🔑 关键：点击「上传图文」Tab，否则默认可能是视频模式
+    // 🔑 关键：点击「上传图文」Tab — 元素可能在视口外，用 force
     const imageTabSelectors = [
       page.getByText('上传图文').first(),
       page.locator('text=上传图文').first(),
       page.locator('[class*="tab"]:has-text("图文")').first(),
+      page.locator('span:has-text("上传图文")').first(),
     ];
     for (const tab of imageTabSelectors) {
       try {
-        if (await tab.isVisible({ timeout: 2000 })) {
-          await tab.click();
+        // 先尝试普通点击，再尝试 force 点击
+        if (await tab.isVisible({ timeout: 2000 }).catch(() => false)) {
+          await tab.click({ force: true, timeout: 3000 });
           console.log('   📷 已切换到图文模式');
           await randomDelay(1000, 2000);
           break;
         }
-      } catch {}
+      } catch {
+        // 最后方案：JS click
+        try { await tab.evaluate(el => el.click()); console.log('   📷 JS切换图文'); break; } catch {}
+      }
     }
 
     // Step 3: 生成并上传封面图
@@ -325,27 +330,31 @@ async function postToXHSWithContext(context, note, opts = {}) {
       return { success: false, reason: 'no_title_input' };
     }
 
-    // Step 5: 填正文 — 小红书的正文是一个富文本编辑器
-    const editorSel = '.ql-editor, [contenteditable="true"], [placeholder*="内容"], [class*="editor"] [contenteditable], #post-textarea';
+    // Step 5: 填正文 — 小红书使用 Tiptap (ProseMirror) 富文本编辑器
+    // 特征: div.ProseMirror[contenteditable] 或 div.tiptap
+    const editorSel = '.ProseMirror, .tiptap, [contenteditable="true"], .ql-editor, #post-textarea';
+    let editorFilled = false;
     try {
       const editor = page.locator(editorSel).first();
-      await editor.click({ timeout: 5000 });
+      await editor.click({ timeout: 5000, force: true });
+      await page.waitForTimeout(300);
+      await page.keyboard.type(body, { delay: 40 });
+      editorFilled = true;
     } catch {
       // Fallback: Tab 导航到编辑器
       await page.keyboard.press('Tab');
       await page.keyboard.press('Tab');
+      await page.keyboard.press('Tab');
+      await page.waitForTimeout(300);
+      await page.keyboard.type(body, { delay: 40 });
+      editorFilled = true;
     }
-    await randomDelay(500, 1000);
-    // 先清空再输入
-    await page.keyboard.press('Control+a');
-    await page.keyboard.press('Backspace');
-    await page.keyboard.type(body, { delay: 40 });
     console.log(`   ✍️  正文已填写 (${body.length} 字)`);
 
     // Step 6: 标签 — 简化，标签不容易失败
     if (tags.length > 0) {
       try {
-        const addTagBtn = page.getByText('添加话题').first();
+        const addTagBtn = page.locator('button:has-text("话题"), span:has-text("添加话题"), .topic-btn').first();
         if (await addTagBtn.isVisible({ timeout: 2000 })) {
           await addTagBtn.click();
           await randomDelay(800, 1500);
@@ -370,28 +379,29 @@ async function postToXHSWithContext(context, note, opts = {}) {
     console.log('   🚀 点击发布...');
     await randomDelay(2000, 3000);
 
-    // 小红书发布按钮可能有多种：发布、提交、确定
+    // 小红书发布按钮：SPAN 文本 "发布笔记"
     let clicked = false;
     const publishSelectors = [
-      page.locator('button:has-text("发布"):not(:has-text("草稿"))').first(),
-      page.locator('[class*="publish"]:not([class*="draft"])').first(),
-      page.getByRole('button', { name: /^发布$/ }).first(),
+      page.locator('span:has-text("发布笔记")').first(),
+      page.locator('text=发布笔记').first(),
+      page.locator('button:has-text("发布笔记")').first(),
+      page.locator('[class*="publish"]').first(),
+      page.getByRole('button', { name: /发布/ }).first(),
       page.locator('.submit-btn').first(),
     ];
 
     for (const btn of publishSelectors) {
       try {
-        const text = await btn.textContent();
-        if (text && text.includes('发布') && !text.includes('草稿')) {
-          await btn.click();
+        if (await btn.isVisible({ timeout: 2000 }).catch(() => false)) {
+          await btn.click({ force: true, timeout: 3000 });
           clicked = true;
+          console.log('   ✅ 点击了发布按钮');
           break;
         }
       } catch {}
     }
 
     if (!clicked) {
-      // 最后尝试：Ctrl+Enter 快捷键
       console.log('   ⚠️  未找到发布按钮，尝试 Ctrl+Enter...');
       await page.keyboard.press('Control+Enter');
     }

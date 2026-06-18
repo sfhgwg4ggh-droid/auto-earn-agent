@@ -36,8 +36,8 @@ jobs:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       ANTHROPIC_BASE_URL: ${{ vars.ANTHROPIC_BASE_URL || 'https://api.deepseek.com/anthropic' }}
       ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL || 'DeepSeek-V4-flash' }}
-      DOMAIN: ${{ vars.DOMAIN || 'zhushishunsui.cloud' }}
-      BASE_URL: ${{ vars.BASE_URL || 'https://zhushishunsui.cloud' }}
+      DOMAIN: ${{ vars.DOMAIN || 'sfhgwg4ggh-droid.github.io/auto-earn-agent' }}
+      BASE_URL: ${{ vars.BASE_URL || 'https://sfhgwg4ggh-droid.github.io/auto-earn-agent' }}
       AMAZON_TAG: ${{ vars.AMAZON_TAG || 'smartpicks-20' }}
       GOOGLE_ANALYTICS_ID: ${{ vars.GOOGLE_ANALYTICS_ID || '' }}
       GOOGLE_ADSENSE_ID: ${{ vars.GOOGLE_ADSENSE_ID || '' }}
@@ -65,6 +65,15 @@ jobs:
       - name: 📄 发布 HTML
         run: node modules/content/publisher.js
         timeout-minutes: 5
+
+      - name: 💰 收益追踪
+        run: node modules/revenue/tracker.js
+
+      - name: 📊 更新仪表盘
+        run: node modules/revenue/dashboard-gen.js
+
+      - name: 🗺 更新 Sitemap
+        run: node modules/seo/sitemap.js
 
       - name: 📤 提交并推送
         run: |

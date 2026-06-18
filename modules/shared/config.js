@@ -19,8 +19,8 @@ export const CONFIG = {
   productsDir: resolve(ROOT, 'public', 'products'),
 
   // 域名 (部署后替换为实际域名)
-  domain: process.env.DOMAIN || 'autoearn.pages.dev',
-  baseUrl: process.env.BASE_URL || 'https://autoearn.pages.dev',
+  domain: process.env.DOMAIN || 'sfhgwg4ggh-droid.github.io/auto-earn-agent',
+  baseUrl: process.env.BASE_URL || 'https://sfhgwg4ggh-droid.github.io/auto-earn-agent',
 
   // AI — via DeepSeek proxy
   anthropic: {
@@ -74,7 +74,7 @@ export const CONFIG = {
   // Affiliate 平台
   affiliates: {
     amazon: {
-      tag: process.env.AMAZON_TAG || 'your-tag-20',
+      tag: process.env.AMAZON_TAG || 'smartpicks-20',
       regions: ['com', 'co.uk', 'ca', 'de', 'fr', 'it', 'es', 'jp'],
       defaultRegion: 'com',
     },

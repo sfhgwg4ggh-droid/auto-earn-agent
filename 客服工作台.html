@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"><title>🐾 客服工作台</title>
+<style>
+:root{--bg:#faf8f4;--card:#fff;--border:#f0ebe0;--primary:#4A7C59;--gold:#D4A853;--red:#c0392b;--text:#3d3022;--text2:#6b5c47;--font:"PingFang SC","Microsoft YaHei",sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);max-width:800px;margin:0 auto;padding:16px;line-height:1.7}
+.header{background:var(--primary);color:#fff;padding:20px;border-radius:12px;margin-bottom:16px;text-align:center}
+.header h1{font-size:20px;margin-bottom:4px}
+.header .sub{font-size:12px;opacity:.85}
+.clipboard{position:fixed;top:10px;right:10px;background:#292524;color:#fff;padding:8px 16px;border-radius:20px;font-size:12px;z-index:99;opacity:0;transition:opacity .3s;pointer-events:none}
+.clipboard.show{opacity:1}
+.section{margin-bottom:16px}
+.section-title{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;padding-left:8px;border-left:3px solid var(--primary)}
+.quick-replies{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.reply-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all .15s}
+.reply-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.08);border-color:var(--gold)}
+.reply-card:active{background:#fef3c7}
+.reply-card .q{font-size:12px;color:var(--text2);margin-bottom:4px}
+.reply-card .a{font-size:13px;color:var(--text);font-weight:500;line-height:1.6}
+.reply-card .tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:8px;margin-top:4px}
+.tag.intro{background:#dbeafe;color:#1e40af}
+.tag.price{background:#fef3c7;color:#92400e}
+.tag.close{background:#dcfce7;color:#166534}
+.tag.objection{background:#fee2e2;color:#991b1b}
+
+.customer-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px}
+.customer-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.customer-name{font-weight:700;font-size:14px}
+.customer-status{font-size:11px;padding:2px 8px;border-radius:8px;font-weight:600}
+.status-new{background:#dbeafe;color:#1e40af}
+.status-bargain{background:#fef3c7;color:#92400e}
+.status-paid{background:#dcfce7;color:#166534}
+.status-done{background:#f0f0f0;color:#666}
+.customer-detail{font-size:12px;color:var(--text2);margin-bottom:6px}
+.customer-actions{display:flex;gap:6px;flex-wrap:wrap}
+.action-btn{font-family:var(--font);font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-weight:600;white-space:nowrap}
+.action-btn:active{opacity:.8}
+.action-btn.send{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+.input-area{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;margin-top:12px}
+.input-area textarea{width:100%;font-family:var(--font);font-size:13px;padding:8px;border:1px solid var(--border);border-radius:8px;resize:vertical;min-height:60px}
+.input-area .row{display:flex;gap:8px;margin-top:8px}
+.input-area input{flex:1;font-family:var(--font);font-size:13px;padding:8px;border:1px solid var(--border);border-radius:8px}
+.input-area button{font-family:var(--font);font-size:13px;font-weight:700;padding:8px 16px;border:none;border-radius:8px;cursor:pointer;background:var(--gold);color:#fff}
+</style></head>
+<body>
+
+<div class="clipboard" id="clipboard">✅ 已复制！去微信粘贴</div>
+
+<div class="header">
+  <h1>🐾 宠物肖像 · 客服工作台</h1>
+  <p class="sub">客户说什么→点对应回复→去微信粘贴→成交</p>
+</div>
+
+<!-- 快捷回复 -->
+<div class="section">
+  <div class="section-title">💬 客户常问 — 点击复制回复</div>
+  <div class="quick-replies" id="quickReplies"></div>
+</div>
+
+<!-- 当前客户 -->
+<div class="section">
+  <div class="section-title">👤 当前对话 — 模拟跟进</div>
+  <div id="customerList"></div>
+</div>
+
+<!-- 自定义回复 -->
+<div class="input-area">
+  <textarea id="customMsg" placeholder="客户说了什么？把他的话粘贴到这里…"></textarea>
+  <div class="row">
+    <input id="customerName" placeholder="客户昵称（可选）">
+    <button onclick="generateReply()">🤖 生成回复</button>
+  </div>
+  <div id="aiReply" style="margin-top:8px;padding:10px;background:#fef3c7;border-radius:8px;font-size:13px;display:none"></div>
+</div>
+
+<script>
+const QUICK_REPLIES = [
+  {q:'"多少钱？"', a:'亲～看你要哪款哦😊\n🎨 定制肖像 ¥88（发照片→手绘→2天出稿）\n😂 狗妈/狗爸定义画 ¥39（电子版秒发）\n🌈 彩虹桥纪念画 ¥29\n\n现在下单还送免费修改～选哪款？', tag:'price'},
+  {q:'"怎么下单？"', a:'超简单的！🤗\n1️⃣ 选一款你要的\n2️⃣ 支付宝/微信扫码付款\n3️⃣ 发我付款截图+你家毛孩子的照片\n4️⃣ 2-3天出稿给你确认\n5️⃣ 满意后发高清文件，自己打印装裱\n\n全程电子版，不用等快递～现在下单？', tag:'intro'},
+  {q:'"能便宜点吗？"', a:'亲你眼光太好了！💝\n这个价格已经是纯手工的良心价了，市面上同类服务都是¥128-198哦\n\n不过你是今天第1个咨询的，送你一个小福利：下单2款以上打9折！\n\n现在定吗？把你的毛孩子照片发我～', tag:'bargain'},
+  {q:'"多久能拿到？"', a:'一般2-3天出稿给你确认哦📅\n急的话可以加急24小时（+¥30）\n\n电子版直接发你微信/邮箱\n自己淘宝打印8x10寸只要¥5块\n\把照片发我，我现在就安排画师开工！', tag:'intro'},
+  {q:'"怎么保证画得像？"', a:'放心！我们有3重保障🛡️\n✅ 纯手绘，不是AI/滤镜\n✅ 画完发你确认，改到满意为止\n✅ 不满意全额退款\n\n你可以看看我们的作品集👇🏻(发作品图)\n\n相信我们一次？不满意退你钱', tag:'objection'},
+  {q:'"先看作品"', a:'当然可以！👇🏻(发作品图)\n\n这些是最近的客户反馈～\n左边是照片，右边是我们的手绘成品\n\n你看这个金毛的细节，每一根毛都是手画的 ✨\n\n想做你家毛孩子的话，发照片来～', tag:'intro'},
+  {q:'"发你了，多久好？"', a:'收到照片啦！已经安排画师开工 🎨\n\n预计2-3天后发你第一版确认\n\n你特别喜欢什么风格？\n🌿 水彩浪漫\n📐 极简线条\n🌈 波西米亚\n🎭 趣味卡通\n\n告诉我，画师按你喜好来～', tag:'close'},
+  {q:'"付了，查收"', a:'收到！✅ 已确认到账\n\n画师已经开始画你家毛孩子了🐾\n预计2-3天出第一版\n到时候发你确认～\n\n有任何问题随时找我😊\n期待给你一个惊喜！', tag:'close'},
+];
+
+document.getElementById('quickReplies').innerHTML = QUICK_REPLIES.map(r => `
+  <div class="reply-card" onclick="copyReply(this)" data-reply="${r.a.replace(/"/g,'&quot;')}">
+    <div class="q">🙋 ${r.q}</div>
+    <div class="a">${r.a.replace(/\n/g,'<br>')}</div>
+    <span class="tag ${r.tag}">${r.tag==='price'?'💰价格':r.tag==='intro'?'📋介绍':r.tag==='close'?'✅成交':r.tag==='objection'?'🤔疑虑':r.tag==='bargain'?'🔪砍价':''}</span>
+  </div>
+`).join('');
+
+function copyReply(el) {
+  const text = el.dataset.reply;
+  navigator.clipboard.writeText(text).then(() => {
+    const c = document.getElementById('clipboard');
+    c.classList.add('show');
+    setTimeout(() => c.classList.remove('show'), 1500);
+  }).catch(() => alert('复制失败，请手动选中文字'));
+}
+
+// 生成AI回复
+function generateReply() {
+  const msg = document.getElementById('customMsg').value.trim();
+  const name = document.getElementById('customerName').value.trim() || '亲';
+  if (!msg) return;
+
+  let reply = '';
+  const m = msg.toLowerCase();
+
+  if (m.includes('多少钱')||m.includes('价格')||m.includes('费用')||m.includes('怎么收费')) {
+    reply = `${name}好～看你要哪款😊\n🎨 定制宠物肖像 ¥88（发照片→手绘→2-3天）\n😂 狗妈/狗爸定义画 ¥39\n🌈 彩虹桥纪念画 ¥29\n👨‍👩‍👧‍👦 全家福+宠物 ¥168\n\n今天下单免费修改～选哪款？`;
+  } else if (m.includes('便宜')||m.includes('优惠')||m.includes('打折')||m.includes('少点')||m.includes('贵')) {
+    reply = `${name}，这个已经是纯手绘的良心价了💝\n市面上同类服务 ¥128-198\n\n不过你是今天前几位咨询的：\n✨ 下单2款以上打9折\n✨ 推荐朋友下单，每单给你返¥10\n\n保证物超所值！现在定吗？`;
+  } else if (m.includes('怎么')||m.includes('如何')||m.includes('流程')||m.includes('步骤')) {
+    reply = `超简单！${name}🤗\n1️⃣ 选款式\n2️⃣ 付款（支付宝/微信）\n3️⃣ 发我你家毛孩子照片\n4️⃣ 2-3天出稿给你确认\n5️⃣ 满意→发高清文件\n\n照片随时可以发～`;
+  } else if (m.includes('多久')||m.includes('几天')||m.includes('时间')) {
+    reply = `${name}，一般2-3天出稿📅\n急的话24小时加急+¥30\n\n电子版直接发你微信\n自己淘宝打印8x10寸只要¥5\n\n现在下单？把照片发我～`;
+  } else if (m.includes('发了')||m.includes('照片')||m.includes('看看')||m.includes('可以吗')) {
+    reply = `收到！${name}，照片看过了🐾\n画师可以开工～\n\n你偏好什么风格？\n🌿 水彩浪漫\n📐 极简线条\n🌈 波西米亚\n🎭 趣味卡通\n\n告诉我，我们按你喜欢来！`;
+  } else if (m.includes('付了')||m.includes('付款')||m.includes('转账')||m.includes('查收')) {
+    reply = `收到！✅ ${name}\n\n画师已开工🐾 预计2-3天出第一版\n到时候发你确认\n\n有问题随时找我😊`;
+  } else {
+    reply = `${name}好！感谢咨询😊\n\n我们做纯手绘宠物肖像定制：\n🎨 定制肖像 ¥88\n😂 狗妈定义画 ¥39\n🌈 纪念画 ¥29\n\n感兴趣哪款？发你家毛孩子照片来～`;
+  }
+
+  const div = document.getElementById('aiReply');
+  div.style.display = 'block';
+  div.innerHTML = `<b>🤖 建议回复:</b><br><br>${reply.replace(/\n/g,'<br>')}<br><br><button onclick="navigator.clipboard.writeText(this.previousElementSibling?.textContent||'')" style="font-family:var(--font);font-size:12px;padding:4px 12px;border-radius:12px;border:1px solid var(--primary);background:#fff;color:var(--primary);cursor:pointer">📋 复制这段话</button>`;
+}
+
+// 模拟客户跟进
+const MOCK_CUSTOMERS = [
+  {name:'爱宠达人小王',status:'new',product:'问了狗妈定义画',lastMsg:'"多少钱啊？"'},
+  {name:'毛孩子麻麻',status:'bargain',product:'定制肖像 金毛',lastMsg:'"能再便宜50吗"'},
+  {name:'汪星人的爹',status:'paid',product:'狗爸定义画 ¥39',lastMsg:'"付了，什么时候发"'},
+];
+document.getElementById('customerList').innerHTML = MOCK_CUSTOMERS.map(c => `
+  <div class="customer-card">
+    <div class="customer-top">
+      <span class="customer-name">${c.name}</span>
+      <span class="customer-status status-${c.status}">${c.status==='new'?'🆕 新询价':c.status==='bargain'?'💬 议价中':c.status==='paid'?'💰 已付款':'✅ 已完成'}</span>
+    </div>
+    <div class="customer-detail">🐾 ${c.product} · 最后消息: ${c.lastMsg}</div>
+    <div class="customer-actions">
+      <button class="action-btn send" onclick="document.getElementById('customerName').value='${c.name}';document.getElementById('customMsg').value='${c.lastMsg.replace(/"/g,'')}';generateReply()">🤖 生成回复</button>
+      <button class="action-btn">📝 记录</button>
+    </div>
+  </div>
+`).join('');
+</script>
+</body>
+</html>
