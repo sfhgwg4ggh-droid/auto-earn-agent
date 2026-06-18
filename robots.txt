@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard/
+Disallow: /assets/
+
+Sitemap: https://zhushishunsui.cloud/sitemap.xml
+
+Host: zhushishunsui.cloud

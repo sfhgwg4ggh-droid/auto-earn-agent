@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🤖 Agent 中央控制台</title>
+<meta http-equiv="refresh" content="300">
+<style>
+:root{--green:#4A7C59;--gold:#D4A853;--blue:#1a56db;--orange:#f97316;--bg:#fafbfc;--card:#fff;--border:#e5e7eb;--text:#111827;--text2:#4b5563;--font:system-ui,sans-serif;--radius:12px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;max-width:1200px;margin:0 auto;padding:24px 16px;min-height:100vh}
+.header{text-align:center;padding:48px 0 32px}
+.header h1{font-size:2rem;margin-bottom:8px}
+.header p{color:var(--text2)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px}
+@media(max-width:768px){.grid{grid-template-columns:1fr}}
+
+.panel{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden}
+.panel-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.panel-header h2{font-size:18px;display:flex;align-items:center;gap:8px}
+.panel-body{padding:20px 24px}
+.badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600}
+.badge-running{background:#dcfce7;color:#166534}.badge-running::before{content:'● ';color:#22c55e}
+.badge-paused{background:#fef3c7;color:#92400e}.badge-paused::before{content:'● ';color:#f59e0b}
+
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:16px}
+.stat{text-align:center;padding:12px;background:#f9fafb;border-radius:8px}
+.stat-val{font-size:24px;font-weight:800}
+.stat-lbl{font-size:11px;color:var(--text2);margin-top:2px}
+.stat-val.green{color:var(--green)}
+.stat-val.blue{color:var(--blue)}
+.stat-val.orange{color:var(--orange)}
+.stat-val.gold{color:var(--gold)}
+
+.link-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.link-btn{display:inline-block;padding:5px 12px;border-radius:6px;font-size:12px;text-decoration:none;font-weight:500;border:1px solid var(--border);color:var(--text2);background:#fff;transition:all .15s}
+.link-btn:hover{border-color:var(--blue);color:var(--blue)}
+
+.status-bar{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--text2);margin-bottom:12px}
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
+.status-dot.on{background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.auto-refresh{font-size:11px;color:var(--text2);text-align:center;padding:16px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🤖 Agent 中央控制台</h1>
+  <p>两个 AI Agent 7×24 自动运行：赚钱 + 求职 · 每 5 分钟自动刷新</p>
+</div>
+
+<div class="grid">
+  <!-- auto-earn-agent -->
+  <div class="panel">
+    <div class="panel-header">
+      <h2>💰 Auto-Earn Agent <span class="badge badge-running">运行中</span></h2>
+    </div>
+    <div class="panel-body">
+      <div class="status-bar">
+        <span><span class="status-dot on"></span>GitHub Actions 自动运行</span>
+        <span>每天 3 次</span>
+      </div>
+      <div class="stats-row" id="earnStats">
+        <div class="stat"><div class="stat-val green" id="earnTotalRev">$—</div><div class="stat-lbl">累计营收</div></div>
+        <div class="stat"><div class="stat-val" id="earnArticles">—</div><div class="stat-lbl">SEO 文章</div></div>
+        <div class="stat"><div class="stat-val gold" id="earnProducts">23</div><div class="stat-lbl">在线商品</div></div>
+        <div class="stat"><div class="stat-val blue" id="earnSocial">—</div><div class="stat-lbl">社交内容</div></div>
+      </div>
+      <div class="link-row">
+        <a href="https://zhushishunsui.cloud" class="link-btn" target="_blank">🌐 SEO 网站</a>
+        <a href="https://zhushishunsui.cloud/dashboard/" class="link-btn" target="_blank">📊 收益仪表盘</a>
+        <a href="https://github.com/sfhgwg4ggh-droid/auto-earn-agent/actions" class="link-btn" target="_blank">⚡ Actions</a>
+        <a href="http://localhost:3456/m.html" class="link-btn" target="_blank">🛒 店铺</a>
+        <a href="http://localhost:3456/auto-admin.html" class="link-btn" target="_blank">📱 管理台</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- job-seeking-agent -->
+  <div class="panel">
+    <div class="panel-header">
+      <h2>💼 Job-Seeking Agent <span class="badge badge-running">运行中</span></h2>
+    </div>
+    <div class="panel-body">
+      <div class="status-bar">
+        <span><span class="status-dot on"></span>GitHub Actions 自动运行</span>
+        <span>每天 2 次</span>
+      </div>
+      <div class="stats-row" id="jobStats">
+        <div class="stat"><div class="stat-val blue" id="jobTotal">—</div><div class="stat-lbl">发现职位</div></div>
+        <div class="stat"><div class="stat-val green" id="jobAnalyzed">—</div><div class="stat-lbl">已分析</div></div>
+        <div class="stat"><div class="stat-val gold" id="jobApplied">—</div><div class="stat-lbl">已投递</div></div>
+        <div class="stat"><div class="stat-val orange" id="jobSkills">20</div><div class="stat-lbl">技能库</div></div>
+      </div>
+      <div class="link-row">
+        <a href="https://github.com/sfhgwg4ggh-droid/job-seeking-agent/actions" class="link-btn" target="_blank">⚡ Actions</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pipeline Status -->
+<div class="panel" style="margin-bottom:32px">
+  <div class="panel-header"><h2>⚡ 自动化流水线</h2></div>
+  <div class="panel-body">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;font-size:13px">
+      <div style="padding:12px;background:#dcfce7;border-radius:8px">
+        <b>🕗 08:00 北京时间</b><br>
+        📝 关键词研究 → AI 生成 SEO 文章<br>
+        📄 发布 HTML → Sitemap 更新
+      </div>
+      <div style="padding:12px;background:#dbeafe;border-radius:8px">
+        <b>🕙 10:00 北京时间</b><br>
+        🔍 爬取 Boss/拉勾/51job<br>
+        📊 AI 分析技能缺口
+      </div>
+      <div style="padding:12px;background:#fef3c7;border-radius:8px">
+        <b>🕓 16:00 北京时间</b><br>
+        📝 第二轮 SEO 内容生成<br>
+        🛒 1688 价格采集
+      </div>
+      <div style="padding:12px;background:#fce4ec;border-radius:8px">
+        <b>🕙 22:00 北京时间</b><br>
+        📚 AI 学习新技能<br>
+        📄 生成简历+求职信
+      </div>
+      <div style="padding:12px;background:#f3e8ff;border-radius:8px">
+        <b>🕖 07:00 北京时间</b><br>
+        📱 小红书笔记生成<br>
+        🐟 闲鱼 Listing 生成
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="auto-refresh">⏱ 每 5 分钟自动刷新 · 最后更新: <span id="lastUpdate"></span></div>
+
+<script>
+document.getElementById('lastUpdate').textContent = new Date().toLocaleString('zh-CN');
+
+// 异步加载实际数据
+async function loadStats() {
+  try {
+    // auto-earn-agent stats
+    const earnResp = await fetch('https://raw.githubusercontent.com/sfhgwg4ggh-droid/auto-earn-agent/main/data/revenue.json');
+    const earnData = await earnResp.json();
+    const monthly = earnData.monthly || [];
+    const totalRev = monthly.reduce((s,r)=>s+(r.estimatedRevenue||0),0);
+    document.getElementById('earnTotalRev').textContent = '$' + totalRev.toFixed(2);
+  } catch(e) {}
+
+  try {
+    const invResp = await fetch('https://raw.githubusercontent.com/sfhgwg4ggh-droid/auto-earn-agent/main/data/content-inventory.json');
+    const inv = await invResp.json();
+    document.getElementById('earnArticles').textContent = (inv||[]).filter(c=>c.publishedAt).length;
+  } catch(e) {}
+
+  try {
+    const xhsResp = await fetch('https://raw.githubusercontent.com/sfhgwg4ggh-droid/auto-earn-agent/main/data/social/xhs-posts.json');
+    const xhs = await xhsResp.json();
+    document.getElementById('earnSocial').textContent = (xhs||[]).length;
+  } catch(e) {}
+
+  try {
+    const jobResp = await fetch('https://raw.githubusercontent.com/sfhgwg4ggh-droid/job-seeking-agent/main/data/jobs.json');
+    const jobs = await jobResp.json();
+    document.getElementById('jobTotal').textContent = (jobs||[]).length;
+    document.getElementById('jobAnalyzed').textContent = (jobs||[]).filter(j=>j.status==='analyzed').length;
+    document.getElementById('jobApplied').textContent = (jobs||[]).filter(j=>j.status==='applied').length;
+  } catch(e) {}
+}
+
+loadStats();
+</script>
+</body>
+</html>
