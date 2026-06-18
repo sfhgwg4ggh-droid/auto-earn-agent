@@ -268,15 +268,35 @@ async function postToXHSWithContext(context, note, opts = {}) {
       return { success: false, reason: 'not_logged_in' };
     }
 
-    // Step 2: 打开发布页
+    // Step 2: 打开发布页 + 切换到图文模式
     await page.goto('https://creator.xiaohongshu.com/publish/publish', { waitUntil: 'domcontentloaded', timeout: 20000 });
-    await randomDelay(3000, 5000);
+    await randomDelay(2000, 3000);
+
+    // 🔑 关键：点击「上传图文」Tab，否则默认可能是视频模式
+    const imageTabSelectors = [
+      page.getByText('上传图文').first(),
+      page.locator('text=上传图文').first(),
+      page.locator('[class*="tab"]:has-text("图文")').first(),
+    ];
+    for (const tab of imageTabSelectors) {
+      try {
+        if (await tab.isVisible({ timeout: 2000 })) {
+          await tab.click();
+          console.log('   📷 已切换到图文模式');
+          await randomDelay(1000, 2000);
+          break;
+        }
+      } catch {}
+    }
 
     // Step 3: 生成并上传封面图
     const imageDataUrl = await generateCoverImage(page, note);
 
+    // 等上传区域加载好
+    await randomDelay(1000, 2000);
     const fileInput = page.locator('input[type="file"]').first();
-    await fileInput.evaluate(el => { el.style.display = 'block'; });
+    // 尝试让它可交互
+    try { await fileInput.evaluate(el => { el.style.display = 'block'; el.style.visibility = 'visible'; }); } catch {}
 
     const tmpDir = resolve(DATA_DIR, '.tmp');
     if (!existsSync(tmpDir)) await mkdir(tmpDir, { recursive: true });
@@ -285,78 +305,102 @@ async function postToXHSWithContext(context, note, opts = {}) {
     await writeFile(tmpFile, Buffer.from(base64Data, 'base64'));
 
     await fileInput.setInputFiles(tmpFile);
-    console.log('   🖼️  封面已上传，等待...');
+    console.log('   🖼️  封面已上传，等待处理...');
     await randomDelay(5000, 8000);
 
-    // Step 4: 填标题
-    const titleSel = '.d-text, [placeholder*="标题"], #title, input[placeholder*="标题"]';
+    // Step 4: 填标题 — 等图片上传完成后再找
+    const titleSel = '.d-text, [placeholder*="标题"], #title, input[placeholder*="标题"], [class*="title"] input';
     try {
-      await page.waitForSelector(titleSel, { timeout: 8000 });
-      await page.locator(titleSel).first().click();
+      await page.waitForSelector(titleSel, { timeout: 10000 });
+      const titleInput = page.locator(titleSel).first();
+      await titleInput.click();
       await randomDelay(300, 800);
+      // 清空可能存在的默认值
+      await titleInput.fill('');
       await page.keyboard.type(title, { delay: 60 });
       console.log(`   ✍️  标题: ${title}`);
     } catch {
-      console.log('   ⚠️  找不到标题输入框');
+      console.log('   ⚠️  找不到标题框，尝试截图...');
+      await page.screenshot({ path: resolve(DATA_DIR, '.tmp', 'debug-no-title.png') });
       return { success: false, reason: 'no_title_input' };
     }
 
-    // Step 5: 填正文
-    const editorSel = '.ql-editor, [contenteditable="true"], [placeholder*="内容"]';
+    // Step 5: 填正文 — 小红书的正文是一个富文本编辑器
+    const editorSel = '.ql-editor, [contenteditable="true"], [placeholder*="内容"], [class*="editor"] [contenteditable], #post-textarea';
     try {
-      await page.locator(editorSel).first().click({ timeout: 5000 });
+      const editor = page.locator(editorSel).first();
+      await editor.click({ timeout: 5000 });
     } catch {
+      // Fallback: Tab 导航到编辑器
+      await page.keyboard.press('Tab');
       await page.keyboard.press('Tab');
     }
     await randomDelay(500, 1000);
+    // 先清空再输入
+    await page.keyboard.press('Control+a');
+    await page.keyboard.press('Backspace');
     await page.keyboard.type(body, { delay: 40 });
     console.log(`   ✍️  正文已填写 (${body.length} 字)`);
 
-    // Step 6: 标签
+    // Step 6: 标签 — 简化，标签不容易失败
     if (tags.length > 0) {
-      const addTagBtn = page.getByText('添加话题').first();
-      if (await addTagBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
-        await addTagBtn.click();
-        await randomDelay(800, 1500);
-        const searchInput = page.locator('input[placeholder*="搜索"]').first();
-        if (await searchInput.isVisible({ timeout: 2000 }).catch(() => false)) {
-          await searchInput.fill(tags[0]);
-          await randomDelay(1000, 2000);
-          const firstResult = page.locator('[class*="topic"]').first();
-          if (await firstResult.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await firstResult.click();
-            console.log(`   🏷️  标签: #${tags[0]}`);
+      try {
+        const addTagBtn = page.getByText('添加话题').first();
+        if (await addTagBtn.isVisible({ timeout: 2000 })) {
+          await addTagBtn.click();
+          await randomDelay(800, 1500);
+          const searchInput = page.locator('input[placeholder*="搜索"]').first();
+          if (await searchInput.isVisible({ timeout: 2000 })) {
+            await searchInput.fill(tags[0]);
+            await randomDelay(1000, 2000);
+            const firstResult = page.locator('[class*="topic"]').first();
+            if (await firstResult.isVisible({ timeout: 2000 })) {
+              await firstResult.click();
+              console.log(`   🏷️  标签: #${tags[0]}`);
+            }
           }
         }
-      }
+      } catch { console.log('   ⚠️  标签添加失败，跳过'); }
     }
 
-    // Step 7: 发布
+    // Step 7: 截图调试（无头模式下记录发布前状态）
+    await page.screenshot({ path: resolve(DATA_DIR, '.tmp', `pre-publish-${Date.now()}.png`) });
+
+    // Step 8: 发布！
     console.log('   🚀 点击发布...');
     await randomDelay(2000, 3000);
 
-    const publishBtns = [
-      page.locator('.publishBtn').first(),
-      page.locator('button:has-text("发布")').first(),
-      page.getByRole('button', { name: /发布/ }).first(),
-      page.locator('[class*="publish-btn"]').first(),
+    // 小红书发布按钮可能有多种：发布、提交、确定
+    let clicked = false;
+    const publishSelectors = [
+      page.locator('button:has-text("发布"):not(:has-text("草稿"))').first(),
+      page.locator('[class*="publish"]:not([class*="draft"])').first(),
+      page.getByRole('button', { name: /^发布$/ }).first(),
+      page.locator('.submit-btn').first(),
     ];
 
-    let clicked = false;
-    for (const btn of publishBtns) {
+    for (const btn of publishSelectors) {
       try {
-        if (await btn.isVisible({ timeout: 2000 })) {
+        const text = await btn.textContent();
+        if (text && text.includes('发布') && !text.includes('草稿')) {
           await btn.click();
           clicked = true;
           break;
         }
       } catch {}
     }
+
     if (!clicked) {
+      // 最后尝试：Ctrl+Enter 快捷键
+      console.log('   ⚠️  未找到发布按钮，尝试 Ctrl+Enter...');
       await page.keyboard.press('Control+Enter');
     }
 
+    // 等待发布完成
     await randomDelay(5000, 8000);
+
+    // 截图验证发布结果
+    await page.screenshot({ path: resolve(DATA_DIR, '.tmp', `post-publish-${Date.now()}.png`) });
 
     // 日志
     const log = await loadPostLog();

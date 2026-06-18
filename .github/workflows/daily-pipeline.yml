@@ -58,9 +58,25 @@ jobs:
       - name: 🎭 安装 Playwright 浏览器
         run: npx playwright install chromium --with-deps
 
-      - name: 🤖 运行 Agent（自主决策 + 执行 + 提交）
-        run: node agent.js
-        timeout-minutes: 30
+      - name: 🤖 生成内容
+        run: node modules/content/generator.js
+        timeout-minutes: 15
+
+      - name: 📄 发布 HTML
+        run: node modules/content/publisher.js
+        timeout-minutes: 5
+
+      - name: 📤 提交并推送
+        run: |
+          git config user.name "Auto-Earn Agent 🤖"
+          git config user.email "agent@zhushishunsui.cloud"
+          git add data/ public/
+          if git diff --staged --quiet; then
+            echo "📭 No changes to commit"
+          else
+            git commit -m "📝 daily publish $(date +%Y-%m-%d)" && git push
+            echo "✅ Published!"
+          fi
 
       - name: 📊 运行摘要
         if: always()
