@@ -1,8 +1,9 @@
 User-agent: *
 Allow: /
-Disallow: /dashboard/
-Disallow: /assets/
+Sitemap: sfhgwg4ggh-droid.github.io/auto-earn-agent/sitemap.xml
 
-Sitemap: https://zhushishunsui.cloud/sitemap.xml
+User-agent: GPTBot
+Disallow: /
 
-Host: zhushishunsui.cloud
+User-agent: CCBot
+Disallow: /
