@@ -29,6 +29,33 @@
         "commission": 0
       },
       "recordedAt": "2026-06-17T23:01:28.015Z"
+    },
+    {
+      "date": "2026-06-18",
+      "daysSinceStart": 1,
+      "totalArticles": 6,
+      "totalArticlesToday": 6,
+      "totalProducts": 20,
+      "affiliateLinks": 16,
+      "keywordsRemaining": 15,
+      "estimatedDailyPV": 48,
+      "estimatedClicks": 1,
+      "estimatedConversions": 0,
+      "estimatedRevenue": 0,
+      "estimatedCTR": 0.03,
+      "estimatedTotalRevenue": 0,
+      "googleAnalytics": {
+        "pageViews": 0,
+        "sessions": 0,
+        "clicks": 0
+      },
+      "amazonAssociates": {
+        "clicks": 0,
+        "orderedItems": 0,
+        "revenue": 0,
+        "commission": 0
+      },
+      "recordedAt": "2026-06-18T01:40:27.505Z"
     }
   ],
   "transactions": []
