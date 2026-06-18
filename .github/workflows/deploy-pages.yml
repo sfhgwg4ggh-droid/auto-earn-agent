@@ -1,20 +1,14 @@
-# 部署 GitHub Pages — 将 public/ 目录推送到 gh-pages 分支
+# 部署 GitHub Pages — 将 public/ 推送到 gh-pages 分支
 name: 🚀 Deploy to GitHub Pages
 
 on:
   workflow_dispatch:
-  # push 触发：任何内容变更立即部署（daily/commerce/seo/revenue pipeline 都会触发）
   push:
     branches: [main]
     paths:
       - 'public/**'
       - 'data/content-inventory.json'
-  # 兜底：daily pipeline 完成后也触发
-  workflow_run:
-    workflows: ['📝 Daily Content Pipeline']
-    types: [completed]
 
-# 确保每次只有一个部署在跑
 concurrency:
   group: pages
   cancel-in-progress: true
@@ -23,36 +17,19 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    # 只在内容流水线成功或手动触发时运行
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     permissions:
       contents: write
 
     steps:
-      - name: 📥 检出代码 (gh-pages 分支)
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          path: old-pages
-
-      - name: 📥 检出代码 (main 分支)
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          path: main-code
-
-      - name: 🔧 确保目录结构完整
-        run: |
-          cd main-code
-          mkdir -p public/blog public/products public/dashboard public/assets
+      - uses: actions/checkout@v4
 
       - name: 🚀 部署到 GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./main-code/public
+          publish_dir: ./public
           publish_branch: gh-pages
           commit_message: 'deploy: ${{ github.sha }} [skip ci]'
           user_name: 'Auto-Earn Agent'
-          user_email: 'agent@zhushishunsui.cloud'
+          user_email: 'agent@autoearn.dev'
