@@ -31,8 +31,9 @@
     ],
     "refreshSchedule": "每天上午9:00擦亮",
     "platform": "xianyu",
-    "status": "draft",
-    "createdAt": "2026-06-17T23:43:53.038Z"
+    "status": "published",
+    "createdAt": "2026-06-17T23:43:53.038Z",
+    "postedAt": "2026-06-18T00:26:44.775Z"
   },
   {
     "id": "xy-2026-06-18-1",
