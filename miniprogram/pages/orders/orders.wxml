@@ -1,0 +1,29 @@
+<view class="orders-page">
+  <view wx:if="{{orders.length === 0}}" class="empty">
+    <text class="empty-icon">📭</text>
+    <text class="empty-text">还没有订单</text>
+    <text class="empty-hint">去首页选择喜欢的作品吧～</text>
+    <navigator url="/pages/index/index" class="btn-primary" style="display:inline-block;margin-top:24rpx;padding:16rpx 48rpx">去逛逛</navigator>
+  </view>
+
+  <view wx:for="{{orders}}" wx:key="orderNo" class="order-card">
+    <view class="order-header">
+      <text class="order-no">{{item.orderNo}}</text>
+      <text class="order-status status-{{item.status}}">{{item.status === 'pending' ? '⏳ 待付款' : item.status === 'paid' ? '💰 已付款' : item.status === 'delivered' ? '✅ 已交付' : '📋 处理中'}}</text>
+    </view>
+    <view class="order-body">
+      <image class="order-img" src="/images/{{item.productName}}.png" mode="aspectFit" />
+      <view class="order-info">
+        <text class="order-product">{{item.productName}}</text>
+        <text class="order-pet">🐾 {{item.petName}}</text>
+        <text class="order-price price price-big">¥{{item.price}}</text>
+      </view>
+    </view>
+    <view class="order-footer">
+      <text class="order-time">🕐 {{item.createdAt}}</text>
+      <text wx:if="{{item.status === 'pending'}}" class="reminder">📱 请扫码付款后联系客服</text>
+      <text wx:if="{{item.status === 'paid'}}" class="reminder done">🎨 制作中，预计2-3天发稿</text>
+      <text wx:if="{{item.status === 'delivered'}}" class="reminder done">✅ 已发送，请查收邮箱</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,38 @@
+<view class="detail">
+  <image class="detail-img" src="/images/{{product.name}}.png" mode="aspectFit" />
+
+  <view class="detail-body">
+    <view class="tag-row">
+      <view wx:if="{{product.tag}}" class="tag tag-{{product.tag === 'BESTSELLER' ? 'best' : product.tag === 'HOT' ? 'hot' : product.tag === 'NEW' ? 'new' : product.tag === 'GIFT' ? 'gift' : 'premium'}}">{{product.tag}}</view>
+    </view>
+    <view class="detail-name">{{product.emoji}} {{product.name}}</view>
+    <view class="detail-price">
+      <text class="price price-big">¥{{product.price}}</text>
+      <text class="price-unit"> / 电子版</text>
+    </view>
+    <view class="detail-meta">📥 电子版即时交付 · 🔄 改到满意 · 📐 多尺寸可选</view>
+
+    <view class="detail-desc">
+      <view class="desc-title">📖 产品详情</view>
+      <view class="desc-text">{{product.detail}}</view>
+    </view>
+
+    <view class="process">
+      <view class="desc-title">📋 定制流程</view>
+      <view class="proc-item">📸 <text class="bold">你发照片</text> — 选一张毛孩子最可爱的照片</view>
+      <view class="proc-item">🎨 <text class="bold">我们手绘</text> — 纯手绘，不是AI/滤镜</view>
+      <view class="proc-item">✅ <text class="bold">你确认</text> — 发预览给你，改到满意</view>
+      <view class="proc-item">📥 <text class="bold">收文件</text> — 高清电子版，自己打印装裱</view>
+    </view>
+  </view>
+</view>
+
+<view class="bottom-bar">
+  <view class="bar-left">
+    <view class="price price-big">¥{{product.price}}</view>
+    <view class="bar-desc">{{product.desc}}</view>
+  </view>
+  <view class="bar-right">
+    <button class="btn-primary bar-btn" bindtap="buyNow">立即购买</button>
+  </view>
+</view>

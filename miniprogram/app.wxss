@@ -1,0 +1,18 @@
+page{background:#fdfaf3;color:#3d3022;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7}
+.container{padding:16rpx}
+.card{background:#fff;border-radius:16rpx;padding:24rpx;margin-bottom:20rpx;box-shadow:0 2rpx 12rpx rgba(0,0,0,.04)}
+.price{color:#c0392b;font-weight:800}
+.price-big{font-size:48rpx}
+.price-sm{font-size:28rpx}
+.btn-primary{background:#4A7C59;color:#fff;border-radius:40rpx;text-align:center;padding:20rpx;font-weight:700;border:none}
+.btn-primary:active{background:#3A6347}
+.btn-outline{background:transparent;color:#4A7C59;border:2rpx solid #4A7C59;border-radius:40rpx;text-align:center;padding:18rpx;font-weight:600}
+.btn-gold{background:#D4A853;color:#fff;border-radius:40rpx;text-align:center;padding:20rpx;font-weight:700;border:none}
+.tag{display:inline-block;padding:4rpx 16rpx;border-radius:20rpx;font-size:20rpx;font-weight:700}
+.tag-best{background:#fee2e2;color:#c0392b}
+.tag-hot{background:#fff7ed;color:#f97316}
+.tag-new{background:#dcfce7;color:#166534}
+.tag-gift{background:#fef3c7;color:#92400e}
+.tag-premium{background:#ede9fe;color:#6d28d9}
+.empty{text-align:center;padding:80rpx 0;color:#9b8b7e}
+.qr-box{width:300rpx;height:300rpx;margin:0 auto;display:block;border-radius:16rpx}

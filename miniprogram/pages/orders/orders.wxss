@@ -1,0 +1,17 @@
+.orders-page{padding:20rpx;min-height:100vh}
+.order-card{background:#fff;border-radius:16rpx;padding:24rpx;margin-bottom:20rpx;box-shadow:0 2rpx 12rpx rgba(0,0,0,.04)}
+.order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16rpx}
+.order-no{font-size:22rpx;color:#9b8b7e;font-weight:600}
+.order-status{font-size:22rpx;padding:4rpx 16rpx;border-radius:20rpx;font-weight:600}
+.status-pending{background:#fef3c7;color:#92400e}
+.status-paid{background:#dbeafe;color:#1e40af}
+.status-delivered{background:#dcfce7;color:#166534}
+.order-body{display:flex;gap:16rpx;margin-bottom:16rpx}
+.order-img{width:140rpx;height:140rpx;border-radius:12rpx;background:#fdfaf3}
+.order-info{flex:1;display:flex;flex-direction:column;gap:6rpx}
+.order-product{font-size:28rpx;font-weight:700}
+.order-pet{font-size:24rpx;color:#6b5c47}
+.order-footer{border-top:1rpx solid #f0ebe0;padding-top:16rpx}
+.order-time{font-size:22rpx;color:#9b8b7e}
+.reminder{display:block;font-size:24rpx;margin-top:8rpx;color:#f97316}
+.reminder.done{color:#4A7C59}

@@ -1,0 +1,40 @@
+<view class="hero">
+  <view class="hero-title">🐾 PawsomeArt</view>
+  <view class="hero-desc">纯手绘宠物肖像 · 电子版 · 即时交付</view>
+</view>
+
+<view class="slogan">
+  <text>📸 发照片 → 🎨 纯手绘 → 💝 永久珍藏</text>
+</view>
+
+<view class="product-list">
+  <view class="product" wx:for="{{products}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+    <view class="product-img-wrap">
+      <image class="product-img" src="{{item.img}}" mode="aspectFit" lazy-load />
+      <view wx:if="{{item.tag}}" class="tag tag-{{item.tag === 'BESTSELLER' ? 'best' : item.tag === 'HOT' ? 'hot' : item.tag === 'NEW' ? 'new' : item.tag === 'GIFT' ? 'gift' : 'premium'}}">{{item.tag}}</view>
+    </view>
+    <view class="product-info">
+      <view class="product-name">{{item.emoji}} {{item.name}}</view>
+      <view class="product-desc">{{item.desc}}</view>
+      <view class="product-bottom">
+        <view class="price price-big">¥{{item.price}}</view>
+        <view class="buy-btn" catchtap="quickBuy" data-id="{{item.id}}">立即购买</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="how-to">
+  <view class="title">📋 下单流程</view>
+  <view class="steps">
+    <view class="step"><text class="num">1</text>选择商品</view>
+    <view class="step"><text class="num">2</text>填写信息</view>
+    <view class="step"><text class="num">3</text>扫码付款</view>
+    <view class="step"><text class="num">4</text>收文件</view>
+  </view>
+</view>
+
+<view class="footer">
+  <text>🤖 PawsomeArt · 宠物艺术定制</text>
+  <text class="footer-small">纯手绘 · 电子版即时交付 · 改到满意</text>
+</view>

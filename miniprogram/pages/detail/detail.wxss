@@ -1,0 +1,17 @@
+.detail{min-height:100vh;padding-bottom:120rpx}
+.detail-img{width:100%;height:600rpx;background:#fdfaf3}
+.detail-body{padding:24rpx}
+.tag-row{margin-bottom:16rpx}
+.detail-name{font-size:36rpx;font-weight:800;margin-bottom:8rpx}
+.detail-price{display:flex;align-items:baseline;gap:8rpx;margin-bottom:12rpx}
+.price-unit{font-size:24rpx;color:#9b8b7e}
+.detail-meta{font-size:22rpx;color:#9b8b7e;margin-bottom:24rpx;padding-bottom:20rpx;border-bottom:1rpx solid #f0ebe0}
+.detail-desc,.process{background:#faf8f4;border-radius:12rpx;padding:20rpx;margin-bottom:16rpx}
+.desc-title{font-size:26rpx;font-weight:700;color:#8b6914;margin-bottom:12rpx}
+.desc-text{font-size:26rpx;color:#6b5c47;line-height:1.8;white-space:pre-wrap}
+.proc-item{font-size:26rpx;color:#6b5c47;margin-bottom:12rpx;line-height:1.6}
+.bold{font-weight:700}
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;padding:16rpx 24rpx;display:flex;align-items:center;justify-content:space-between;box-shadow:0 -2rpx 12rpx rgba(0,0,0,.06);z-index:10}
+.bar-left{flex:1}
+.bar-desc{font-size:20rpx;color:#9b8b7e}
+.bar-btn{padding:16rpx 48rpx;font-size:30rpx}

@@ -1,0 +1,36 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/detail/detail",
+    "pages/order/order",
+    "pages/orders/orders"
+  ],
+  "tabBar": {
+    "color": "#9b8b7e",
+    "selectedColor": "#4A7C59",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/tab-home.png",
+        "selectedIconPath": "images/tab-home-active.png"
+      },
+      {
+        "pagePath": "pages/orders/orders",
+        "text": "订单",
+        "iconPath": "images/tab-order.png",
+        "selectedIconPath": "images/tab-order-active.png"
+      }
+    ]
+  },
+  "window": {
+    "navigationBarBackgroundColor": "#4A7C59",
+    "navigationBarTitleText": "PawsomeArt 宠物艺术",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#fdfaf3"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

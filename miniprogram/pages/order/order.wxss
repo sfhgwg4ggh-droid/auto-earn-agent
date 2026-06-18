@@ -1,0 +1,33 @@
+.order{padding:20rpx;padding-bottom:120rpx}
+.product-summary{background:#fff;border-radius:16rpx;padding:24rpx;display:flex;gap:20rpx;align-items:center;margin-bottom:20rpx}
+.summary-img{width:160rpx;height:160rpx;border-radius:12rpx;background:#fdfaf3}
+.summary-info{flex:1}
+.summary-name{font-size:30rpx;font-weight:700;margin-bottom:8rpx}
+.summary-meta{font-size:22rpx;color:#9b8b7e;margin-top:4rpx}
+
+.form{background:#fff;border-radius:16rpx;padding:28rpx;margin-bottom:20rpx}
+.form-title{font-size:30rpx;font-weight:700;color:#4A7C59;margin-bottom:24rpx}
+.form-item{margin-bottom:24rpx}
+.label{font-size:26rpx;font-weight:600;color:#3d3022;margin-bottom:8rpx}
+.required{color:#c0392b}
+.form-item input,.form-item textarea{width:100%;font-size:28rpx;padding:16rpx;border:1rpx solid #f0ebe0;border-radius:10rpx;background:#faf8f4}
+.form-item textarea{min-height:120rpx}
+.photo-area{width:100%;height:360rpx;border:2rpx dashed #d4c8b0;border-radius:16rpx;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fdfaf3}
+.photo-preview{width:100%;height:100%}
+.photo-placeholder{display:flex;flex-direction:column;align-items:center;gap:12rpx;color:#9b8b7e;font-size:24rpx}
+.photo-icon{font-size:64rpx}
+.photo-hint{font-size:20rpx;color:#c4b5a5}
+
+.pay-tabs{display:flex;gap:16rpx;margin-bottom:28rpx}
+.pay-tab{flex:1;text-align:center;padding:20rpx;border-radius:12rpx;border:2rpx solid #f0ebe0;font-size:28rpx;font-weight:600;color:#6b5c47}
+.pay-tab.active{border-color:#4A7C59;background:#dcfce7;color:#4A7C59}
+.pay-icon{font-size:36rpx}
+
+.qr-section{text-align:center}
+.qr-title{display:block;font-size:28rpx;font-weight:600;margin-bottom:20rpx}
+.qr-box{width:360rpx;height:360rpx;margin:0 auto;border-radius:16rpx;background:#fff;padding:16rpx}
+.qr-desc{display:block;font-size:22rpx;color:#9b8b7e;margin-top:16rpx}
+
+.submit-area{text-align:center}
+.btn-submit{width:100%;padding:28rpx;font-size:32rpx}
+.submit-hint{font-size:22rpx;color:#9b8b7e;margin-top:12rpx}
