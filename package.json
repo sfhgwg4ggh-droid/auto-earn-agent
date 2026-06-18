@@ -22,7 +22,8 @@
     "cheerio": "^1.0.0",
     "front-matter": "^4.0.2",
     "handlebars": "^4.7.8",
-    "playwright": "^1.48.0"
+    "playwright": "^1.48.0",
+    "xiaohongshu-mcp-node": "^1.0.1"
   },
   "engines": {
     "node": ">=20.0.0"
