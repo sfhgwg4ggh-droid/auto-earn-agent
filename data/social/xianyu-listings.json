@@ -66,5 +66,35 @@
     "status": "draft",
     "createdAt": "2026-06-18T00:09:26.796Z",
     "coverImage": "/images/xy/cover-xy-2026-06-18-1.png"
+  },
+  {
+    "id": "xy-2026-06-19-2",
+    "product": "Rainbow Bridge 宠物纪念打印画",
+    "category": "纪念品",
+    "title": "🌈 宠物纪念 Rainbow Bridge 打印画 | 电子版 | 悼念礼物",
+    "price": 29,
+    "priceRange": {
+      "min": 19,
+      "max": 39,
+      "recommended": 29
+    },
+    "description": "🌈 彩虹桥宠物纪念打印画\n\n温柔地纪念你最好的朋友。\n\n📁 电子版数字文件\n🖨️ 3个尺寸可选\n🎨 3种配色：日落/月光/花园\n💝 包含配套悼念卡片\n📥 下单秒发\n\n💰 ¥29\n💝 最温柔的纪念方式",
+    "tags": [
+      "宠物纪念",
+      "彩虹桥",
+      "宠物悼念",
+      "纪念礼物",
+      "数字下载"
+    ],
+    "tagString": "#宠物纪念 #彩虹桥 #宠物悼念 #纪念礼物 #数字下载",
+    "images": [
+      "成品展示",
+      "3种配色对比",
+      "装裱效果"
+    ],
+    "refreshSchedule": "每天上午9:00擦亮",
+    "platform": "xianyu",
+    "status": "draft",
+    "createdAt": "2026-06-19T12:55:34.060Z"
   }
 ]
