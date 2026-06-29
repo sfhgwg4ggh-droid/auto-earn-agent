@@ -189,8 +189,10 @@
     "xhsEmoji": "🌸",
     "createdAt": "2026-06-24T16:38:07.036Z",
     "updatedAt": "2026-06-24T16:38:07.036Z",
-    "status": "draft",
-    "_updated": "2026-06-24T16:38:07.037Z"
+    "status": "published",
+    "_updated": "2026-06-24T16:38:07.037Z",
+    "publishedAt": "2026-06-29T17:14:06.246Z",
+    "publishedUrl": "/xiaohongshu/notes/天然线香套装-沉香檀香-香道入门.html"
   },
   {
     "slug": "天然黄芪切片-养生茶包DIY材料",
@@ -214,8 +216,10 @@
     "xhsEmoji": "🍵",
     "createdAt": "2026-06-24T16:38:19.802Z",
     "updatedAt": "2026-06-24T16:38:19.802Z",
-    "status": "draft",
-    "_updated": "2026-06-24T16:38:19.803Z"
+    "status": "published",
+    "_updated": "2026-06-24T16:38:19.803Z",
+    "publishedAt": "2026-06-29T17:14:06.246Z",
+    "publishedUrl": "/xiaohongshu/notes/天然黄芪切片-养生茶包DIY材料.html"
   },
   {
     "slug": "车载香薰挂饰-高级感-持久留香",
@@ -239,7 +243,90 @@
     "xhsEmoji": "🚘",
     "createdAt": "2026-06-24T16:38:29.938Z",
     "updatedAt": "2026-06-24T16:38:29.938Z",
-    "status": "draft",
-    "_updated": "2026-06-24T16:38:29.939Z"
+    "status": "published",
+    "_updated": "2026-06-24T16:38:29.939Z",
+    "publishedAt": "2026-06-29T17:14:06.247Z",
+    "publishedUrl": "/xiaohongshu/notes/车载香薰挂饰-高级感-持久留香.html"
+  },
+  {
+    "slug": "天然水晶散珠-DIY手工串珠材料",
+    "title": "💎 天然水晶散珠 DIY手工串珠材料测评来啦",
+    "hook": "",
+    "body": "\n<p>作为一个手工串珠爱好者，我试过不下10款产品，这款真的让我眼前一亮。</p>\n\n<p><strong>💰 价格：</strong>市面上同类产品大多卖 ¥35~65，这款只要 ¥45，性价比直接拉满。</p>\n\n<p><strong>📦 开箱体验：</strong></p>\n<ul>\n  <li>包装精致，送人也拿得出手</li>\n  <li>到手质感超出预期，完全没有廉价感</li>\n  <li>使用感很舒服，连续用了3天没有任何不适</li>\n</ul>\n\n<p><strong>🎯 适合人群：</strong></p>\n<ul>\n  <li>追求性价比的学生党</li>\n  <li>喜欢尝试新品的手工串珠控</li>\n  <li>想买来送闺蜜/女朋友的</li>\n</ul>\n\n<p><strong>💡 使用小技巧：</strong>建议搭配日常routine使用，效果翻倍～</p>\n\n<p>总结：¥45的价格，¥75+的品质，闭眼入不踩雷！</p>",
+    "tags": [
+      "手工串珠"
+    ],
+    "cta": "姐妹们觉得怎么样？评论区告诉我~",
+    "coverDescription": "",
+    "seoKeyword": "天然水晶散珠 DIY手工串珠材料",
+    "longTailKeywords": [],
+    "productTitle": "天然水晶散珠 DIY手工串珠材料",
+    "wholesaleCNY": 15,
+    "retailCNY": 45,
+    "profitMargin": 66,
+    "xhsScore": 84,
+    "xhsCategory": "diy",
+    "xhsTag": "手工串珠",
+    "xhsEmoji": "💎",
+    "createdAt": "2026-06-29T17:13:39.348Z",
+    "updatedAt": "2026-06-29T17:13:39.348Z",
+    "status": "published",
+    "_updated": "2026-06-29T17:13:39.348Z",
+    "publishedAt": "2026-06-29T17:14:06.248Z",
+    "publishedUrl": "/xiaohongshu/notes/天然水晶散珠-DIY手工串珠材料.html"
+  },
+  {
+    "slug": "宠物狗狗冲锋衣-户外防风防水-秋冬",
+    "title": "🐕 宠物狗狗冲锋衣 户外防风防水 秋冬测评来啦",
+    "hook": "",
+    "body": "\n<p>作为一个宠物户外爱好者，我试过不下10款产品，这款真的让我眼前一亮。</p>\n\n<p><strong>💰 价格：</strong>市面上同类产品大多卖 ¥69~99，这款只要 ¥79，性价比直接拉满。</p>\n\n<p><strong>📦 开箱体验：</strong></p>\n<ul>\n  <li>包装精致，送人也拿得出手</li>\n  <li>到手质感超出预期，完全没有廉价感</li>\n  <li>使用感很舒服，连续用了3天没有任何不适</li>\n</ul>\n\n<p><strong>🎯 适合人群：</strong></p>\n<ul>\n  <li>追求性价比的学生党</li>\n  <li>喜欢尝试新品的宠物户外控</li>\n  <li>想买来送闺蜜/女朋友的</li>\n</ul>\n\n<p><strong>💡 使用小技巧：</strong>建议搭配日常routine使用，效果翻倍～</p>\n\n<p>总结：¥79的价格，¥109+的品质，闭眼入不踩雷！</p>",
+    "tags": [
+      "宠物户外"
+    ],
+    "cta": "姐妹们觉得怎么样？评论区告诉我~",
+    "coverDescription": "",
+    "seoKeyword": "宠物狗狗冲锋衣 户外防风防水 秋冬",
+    "longTailKeywords": [],
+    "productTitle": "宠物狗狗冲锋衣 户外防风防水 秋冬",
+    "wholesaleCNY": 25,
+    "retailCNY": 79,
+    "profitMargin": 68,
+    "xhsScore": 84,
+    "xhsCategory": "pet",
+    "xhsTag": "宠物户外",
+    "xhsEmoji": "🐕",
+    "createdAt": "2026-06-29T17:13:49.992Z",
+    "updatedAt": "2026-06-29T17:13:49.992Z",
+    "status": "published",
+    "_updated": "2026-06-29T17:13:49.993Z",
+    "publishedAt": "2026-06-29T17:14:06.249Z",
+    "publishedUrl": "/xiaohongshu/notes/宠物狗狗冲锋衣-户外防风防水-秋冬.html"
+  },
+  {
+    "slug": "香薰石膏挂牌-车载挂件-DIY材料包",
+    "title": "🕯️ 香薰石膏挂牌 车载挂件 DIY材料包测评来啦",
+    "hook": "",
+    "body": "\n<p>作为一个手工香氛爱好者，我试过不下10款产品，这款真的让我眼前一亮。</p>\n\n<p><strong>💰 价格：</strong>市面上同类产品大多卖 ¥25~55，这款只要 ¥35，性价比直接拉满。</p>\n\n<p><strong>📦 开箱体验：</strong></p>\n<ul>\n  <li>包装精致，送人也拿得出手</li>\n  <li>到手质感超出预期，完全没有廉价感</li>\n  <li>使用感很舒服，连续用了3天没有任何不适</li>\n</ul>\n\n<p><strong>🎯 适合人群：</strong></p>\n<ul>\n  <li>追求性价比的学生党</li>\n  <li>喜欢尝试新品的手工香氛控</li>\n  <li>想买来送闺蜜/女朋友的</li>\n</ul>\n\n<p><strong>💡 使用小技巧：</strong>建议搭配日常routine使用，效果翻倍～</p>\n\n<p>总结：¥35的价格，¥65+的品质，闭眼入不踩雷！</p>",
+    "tags": [
+      "手工香氛"
+    ],
+    "cta": "姐妹们觉得怎么样？评论区告诉我~",
+    "coverDescription": "",
+    "seoKeyword": "香薰石膏挂牌 车载挂件 DIY材料包",
+    "longTailKeywords": [],
+    "productTitle": "香薰石膏挂牌 车载挂件 DIY材料包",
+    "wholesaleCNY": 10,
+    "retailCNY": 35,
+    "profitMargin": 71,
+    "xhsScore": 83,
+    "xhsCategory": "diy",
+    "xhsTag": "手工香氛",
+    "xhsEmoji": "🕯️",
+    "createdAt": "2026-06-29T17:14:05.239Z",
+    "updatedAt": "2026-06-29T17:14:05.239Z",
+    "status": "published",
+    "_updated": "2026-06-29T17:14:05.240Z",
+    "publishedAt": "2026-06-29T17:14:06.250Z",
+    "publishedUrl": "/xiaohongshu/notes/香薰石膏挂牌-车载挂件-DIY材料包.html"
   }
 ]
