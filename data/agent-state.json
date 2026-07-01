@@ -1,10 +1,10 @@
 {
   "startedAt": "2026-06-17T23:01:22.659Z",
-  "totalRuns": 16,
+  "totalRuns": 17,
   "totalErrors": 0,
-  "lastScrapeAt": "2026-06-24T16:36:24.002Z",
-  "lastGenerateAt": "2026-07-01T12:48:46.554Z",
-  "lastPublishAt": "2026-07-01T12:48:46.482Z",
+  "lastScrapeAt": "2026-07-01T16:44:24.236Z",
+  "lastGenerateAt": "2026-07-01T16:43:01.459Z",
+  "lastPublishAt": "2026-07-01T16:43:01.398Z",
   "lastMonitorAt": "2026-07-01T12:48:46.982Z",
   "lastKeywordsAt": "2026-06-29T17:16:08.914Z",
   "lastSitemapAt": "2026-07-01T12:48:47.006Z",
@@ -12,10 +12,10 @@
   "lastAutoListAt": "2026-07-01T12:48:46.987Z",
   "lastErrorAt": "2026-07-01T12:48:47.002Z",
   "consecutiveErrors": 0,
-  "apiCallsToday": 0,
+  "apiCallsToday": 3,
   "apiCallDate": "2026-07-01",
-  "lastXHSScrapeAt": "2026-06-24T16:37:53.912Z",
-  "lastXHSGenerateAt": "2026-07-01T12:48:46.994Z",
+  "lastXHSScrapeAt": "2026-07-01T16:46:21.607Z",
+  "lastXHSGenerateAt": "2026-07-01T16:47:00.201Z",
   "lastXHSPublishAt": "2026-06-29T17:14:06.252Z",
-  "lastXHSPostAt": "2026-06-24T16:38:34.584Z"
+  "lastXHSPostAt": "2026-07-01T16:47:03.413Z"
 }
