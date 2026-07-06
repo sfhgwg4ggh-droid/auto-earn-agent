@@ -351,8 +351,10 @@
     "xhsEmoji": "🫖",
     "createdAt": "2026-07-01T16:46:32.817Z",
     "updatedAt": "2026-07-01T16:46:32.817Z",
-    "status": "draft",
-    "_updated": "2026-07-01T16:46:32.817Z"
+    "status": "published",
+    "_updated": "2026-07-01T16:46:32.817Z",
+    "publishedAt": "2026-07-06T17:17:14.160Z",
+    "publishedUrl": "/xiaohongshu/notes/十年陈皮丝-新会正宗-理气化痰.html"
   },
   {
     "slug": "手工竹编收纳篮-日式简约-桌面整理",
@@ -376,8 +378,10 @@
     "xhsEmoji": "🧺",
     "createdAt": "2026-07-01T16:46:47.323Z",
     "updatedAt": "2026-07-01T16:46:47.323Z",
-    "status": "draft",
-    "_updated": "2026-07-01T16:46:47.324Z"
+    "status": "published",
+    "_updated": "2026-07-01T16:46:47.324Z",
+    "publishedAt": "2026-07-06T17:17:14.161Z",
+    "publishedUrl": "/xiaohongshu/notes/手工竹编收纳篮-日式简约-桌面整理.html"
   },
   {
     "slug": "九蒸九晒黄精-即食滋补-养生零食",
@@ -401,7 +405,9 @@
     "xhsEmoji": "💪",
     "createdAt": "2026-07-01T16:46:59.199Z",
     "updatedAt": "2026-07-01T16:46:59.199Z",
-    "status": "draft",
-    "_updated": "2026-07-01T16:46:59.199Z"
+    "status": "published",
+    "_updated": "2026-07-01T16:46:59.199Z",
+    "publishedAt": "2026-07-06T17:17:14.162Z",
+    "publishedUrl": "/xiaohongshu/notes/九蒸九晒黄精-即食滋补-养生零食.html"
   }
 ]
