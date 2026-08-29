@@ -1973,6 +1973,33 @@
         "commission": 0
       },
       "recordedAt": "2026-08-28T10:55:32.029Z"
+    },
+    {
+      "date": "2026-08-29",
+      "daysSinceStart": 73,
+      "totalArticles": 13,
+      "totalArticlesToday": 0,
+      "totalProducts": 20,
+      "affiliateLinks": 16,
+      "keywordsRemaining": 15,
+      "estimatedDailyPV": 104,
+      "estimatedClicks": 3,
+      "estimatedConversions": 0,
+      "estimatedRevenue": 0,
+      "estimatedCTR": 0.03,
+      "estimatedTotalRevenue": 0,
+      "googleAnalytics": {
+        "pageViews": 0,
+        "sessions": 0,
+        "clicks": 0
+      },
+      "amazonAssociates": {
+        "clicks": 0,
+        "orderedItems": 0,
+        "revenue": 0,
+        "commission": 0
+      },
+      "recordedAt": "2026-08-29T06:42:03.682Z"
     }
   ],
   "transactions": []
